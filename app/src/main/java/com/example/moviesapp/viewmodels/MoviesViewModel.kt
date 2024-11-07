@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 data class MovieInfo(
     val id: Int,
     val name: String,
+    val rating: Int,
+    val releaseYear: Int,
 )
 
 class MoviesViewModel : ViewModel() {
@@ -34,7 +36,9 @@ class MoviesViewModel : ViewModel() {
                 response.docs.map {
                     MovieInfo(
                         id = it.id,
-                        name = it.name ?: (it.alternativeName ?: "")
+                        name = it.name ?: (it.alternativeName ?: ""),
+                        rating = it.rating?.imdb ?: -1,
+                        releaseYear = it.releaseYear?.start ?: -1
                     )
                 }
             }
