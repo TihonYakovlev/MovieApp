@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                                 viewModel.fetchMoviesList(pageNumber = 1, limitOfMoviesOnPage = 10)
                             }
                         }
-                        MoviesListScreen(modifier = Modifier.systemBarsPadding(), movies = docs.value)
+                        MoviesListScreen(modifier = Modifier.systemBarsPadding(), movies = docs.value.list)
                     }
                 )
 

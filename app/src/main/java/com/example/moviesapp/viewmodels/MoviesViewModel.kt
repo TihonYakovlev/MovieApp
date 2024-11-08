@@ -2,9 +2,7 @@ package com.example.moviesapp.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moviesapp.data.Genre
-import com.example.moviesapp.data.Rating
-import com.example.moviesapp.data.ReleaseYear
+import com.example.moviesapp.repository.Repository
 import com.example.moviesapp.retrofit.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,34 +13,28 @@ import kotlinx.coroutines.launch
 data class MovieInfo(
     val id: Int,
     val name: String,
-    val rating: Int,
+    val rating: Double,
     val releaseYear: Int,
 )
 
+data class MoviesScreenState(
+    val list: List<MovieInfo> = emptyList()
+)
+
 class MoviesViewModel : ViewModel() {
-    private val _movies = MutableStateFlow<List<MovieInfo>>(emptyList())
-    val movies: StateFlow<List<MovieInfo>>
+    private val _movies = MutableStateFlow(MoviesScreenState())
+    val movies: StateFlow<MoviesScreenState>
         get() = _movies.asStateFlow()
+
+    private val repository = Repository()
 
     fun fetchMoviesList(pageNumber: Int, limitOfMoviesOnPage: Int) {
         viewModelScope.launch {
-            val response =
-                RetrofitInstance.api.getMoviesList(
-                    page = pageNumber.toString(),
-                    limit = limitOfMoviesOnPage.toString()
-                )
-
             _movies.update {
-                response.docs.map {
-                    MovieInfo(
-                        id = it.id,
-                        name = it.name ?: (it.alternativeName ?: ""),
-                        rating = it.rating?.imdb ?: -1,
-                        releaseYear = it.releaseYear?.start ?: -1
-                    )
-                }
+                MoviesScreenState(
+                    list = repository.getMovies(page = pageNumber, limit = limitOfMoviesOnPage)
+                )
             }
-
         }
     }
 }

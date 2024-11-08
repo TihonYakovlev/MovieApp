@@ -1,9 +1,9 @@
 package com.example.moviesapp.data
 
 data class Rating(
-    val await: Int?,
-    val filmCritics: Int?,
-    val imdb: Int?,
-    val kp: Int?,
-    val russianFilmCritics: Int?
+    val await: Double?,
+    val filmCritics: Double?,
+    val imdb: Double?,
+    val kp: Double?,
+    val russianFilmCritics: Double?
 )
