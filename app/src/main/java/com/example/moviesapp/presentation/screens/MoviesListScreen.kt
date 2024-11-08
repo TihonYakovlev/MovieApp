@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -20,7 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.moviesapp.viewmodels.MovieInfo
 
@@ -58,13 +62,17 @@ fun MovieCard(movie: MovieInfo) {
 
         Row {
 
-            Image(painter = moviePoster, contentDescription = "Poster")
+            Image(painter = moviePoster, contentDescription = "Poster", modifier = Modifier.width(100.dp))
 
             Column(modifier = Modifier
                 .background(color = Color.White)
-                .padding(5.dp)) {
-                Text(text = movie.name, fontStyle = FontStyle.Normal)
+                .padding(10.dp)) {
+                Text(text = movie.name, fontStyle = FontStyle.Normal, fontSize = 20.sp, letterSpacing = TextUnit.Unspecified, maxLines = 1, overflow = TextOverflow.Visible)
+                Text(text = movie.alternativeName, fontStyle = FontStyle.Italic)
             }
+
+            Text(text = movie.rating.toString(),)
+
         }
 
 

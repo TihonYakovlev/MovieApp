@@ -10,6 +10,7 @@ class Repository {
         return movies.docs.map {
             MovieInfo(
                 id = it.id,
+                alternativeName = it.alternativeName ?: "",
                 name = it.name ?: (it.alternativeName ?: ""),
                 rating = it.rating?.imdb ?: -1.0,
                 releaseYear = it.releaseYear?.start ?: -1,

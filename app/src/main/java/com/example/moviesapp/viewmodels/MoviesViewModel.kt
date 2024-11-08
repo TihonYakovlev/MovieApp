@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 data class MovieInfo(
     val id: Int,
+    val alternativeName: String,
     val name: String,
     val rating: Double,
     val releaseYear: Int,
