@@ -7,4 +7,5 @@ data class Doc(
     val genre: Genre?,
     val rating: Rating?,
     val releaseYear: ReleaseYear?,
+    val poster: Poster,
 )

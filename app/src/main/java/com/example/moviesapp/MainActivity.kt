@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val viewModel: MoviesViewModel by viewModels()
+
             MoviesAppTheme {
                 Scaffold(
                     topBar = {

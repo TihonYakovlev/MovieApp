@@ -3,7 +3,6 @@ package com.example.moviesapp.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviesapp.repository.Repository
-import com.example.moviesapp.retrofit.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +14,7 @@ data class MovieInfo(
     val name: String,
     val rating: Double,
     val releaseYear: Int,
+    val poster: String,
 )
 
 data class MoviesScreenState(

@@ -12,5 +12,6 @@ interface MoviesApi {
     suspend fun getMoviesList(
         @Query("page") page: String,
         @Query("limit") limit: String,
-    ): Movies
+        @Query("notNullFields") notNullFields: String,
+        ): Movies
 }
