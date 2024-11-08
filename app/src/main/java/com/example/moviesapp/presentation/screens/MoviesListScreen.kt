@@ -29,20 +29,20 @@ fun MoviesListScreen(modifier: Modifier, movies: List<MovieInfo>) {
     LazyVerticalGrid(
         GridCells.Adaptive(300.dp),
         contentPadding = PaddingValues(4.dp),
-        modifier = modifier.statusBarsPadding()
+        modifier = modifier
     ) {
         itemsIndexed(movies) { _, movie ->
-            MovieCard(modifier, movie)
+            MovieCard(movie)
         }
     }
 }
 
 @Composable
-fun MovieCard(modifier: Modifier, movie: MovieInfo) {
+fun MovieCard(movie: MovieInfo) {
     val moviePoster = rememberImagePainter(data = movie.poster)
 
     Card(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .requiredHeight(150.dp)
             .padding(4.dp),

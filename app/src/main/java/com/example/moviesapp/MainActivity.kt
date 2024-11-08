@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     },
-                    content = {
+                    content = { innerPadding ->
                         val coroutineScope = rememberCoroutineScope()
                         val docs = viewModel.movies.collectAsState()
 
@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                                 viewModel.fetchMoviesList(pageNumber = 1, limitOfMoviesOnPage = 10)
                             }
                         }
-                        MoviesListScreen(modifier = Modifier.systemBarsPadding(), movies = docs.value.list)
+                        MoviesListScreen(modifier = Modifier.systemBarsPadding().padding(paddingValues = innerPadding), movies = docs.value.list)
                     }
                 )
 
