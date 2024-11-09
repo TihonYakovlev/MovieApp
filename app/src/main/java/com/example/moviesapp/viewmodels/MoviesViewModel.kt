@@ -18,11 +18,15 @@ data class MovieInfo(
     val poster: String,
 )
 
+
 data class MoviesScreenState(
-    val list: List<MovieInfo> = emptyList()
+    val moviesList: List<MovieInfo> = emptyList(),
+    val isNeedToLoadMoreMovies: Boolean = false,
+    val isMoviesLoaded: Boolean = false,
 )
 
 class MoviesViewModel : ViewModel() {
+
     private val _movies = MutableStateFlow(MoviesScreenState())
     val movies: StateFlow<MoviesScreenState>
         get() = _movies.asStateFlow()
@@ -33,9 +37,14 @@ class MoviesViewModel : ViewModel() {
         viewModelScope.launch {
             _movies.update {
                 MoviesScreenState(
-                    list = repository.getMovies(page = pageNumber, limit = limitOfMoviesOnPage)
+                    moviesList = repository.getMovies(
+                        page = pageNumber,
+                        limit = limitOfMoviesOnPage
+                    ),
+                    isMoviesLoaded = true
                 )
             }
         }
     }
+
 }
