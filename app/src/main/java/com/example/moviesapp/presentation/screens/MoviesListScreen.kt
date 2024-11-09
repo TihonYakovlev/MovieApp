@@ -38,7 +38,7 @@ import com.example.moviesapp.viewmodels.MovieInfo
 import com.example.moviesapp.viewmodels.MoviesScreenState
 
 @Composable
-fun MoviesListScreen(modifier: Modifier, screenState: MoviesScreenState) {
+fun MoviesListScreen(modifier: Modifier, screenState: MoviesScreenState, onLoadMore: () -> Int) {
 
     val listState = rememberLazyGridState()
     val isScrollToEnd by remember {
@@ -47,6 +47,9 @@ fun MoviesListScreen(modifier: Modifier, screenState: MoviesScreenState) {
         }
     }
 
+    if (isScrollToEnd) {
+        onLoadMore()
+    }
     if (!screenState.isMoviesLoaded) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator(modifier = Modifier.then(Modifier.size(32.dp)))
@@ -83,9 +86,7 @@ fun MovieCard(movie: MovieInfo) {
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
-
         Row {
-
             Image(
                 painter = moviePoster,
                 contentDescription = "Poster",
@@ -107,9 +108,7 @@ fun MovieCard(movie: MovieInfo) {
                 )
                 Text(text = movie.alternativeName, fontStyle = FontStyle.Italic)
             }
-
             Text(text = movie.rating.toString())
-
         }
     }
 }

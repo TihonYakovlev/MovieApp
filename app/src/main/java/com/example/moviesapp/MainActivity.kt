@@ -16,6 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -58,22 +60,29 @@ class MainActivity : ComponentActivity() {
                     content = { innerPadding ->
                         val coroutineScope = rememberCoroutineScope()
                         val moviesScreenState = viewModel.movies.collectAsState()
+                        var page = remember { mutableIntStateOf(1) }
+                        var onLoadMore = {
+                            coroutineScope.launch {
+                                viewModel.fetchMoviesList(
+                                    pageNumber = page.intValue,
+                                    limitOfMoviesOnPage = 10
+                                )
+                            }
+                            page.intValue++
+                        }
 
                         LaunchedEffect(key1 = Unit) {
-                            coroutineScope.launch {
-                                viewModel.fetchMoviesList(pageNumber = 1, limitOfMoviesOnPage = 10)
-                            }
+                            onLoadMore()
                         }
                         MoviesListScreen(
                             modifier = Modifier
                                 .systemBarsPadding()
                                 .padding(paddingValues = innerPadding),
-                            screenState = moviesScreenState.value
+                            screenState = moviesScreenState.value,
+                            onLoadMore = onLoadMore
                         )
                     }
                 )
-
-
             }
         }
     }
