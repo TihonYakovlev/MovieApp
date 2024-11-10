@@ -89,7 +89,7 @@ fun MoviesListScreen(modifier: Modifier, viewModel: MoviesViewModel) {
     }
 
     LaunchedEffect(isScrollToEnd) {
-
+        println("$isScrollToEnd")
         if (isScrollToEnd) {
             page.value++
         }

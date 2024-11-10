@@ -25,7 +25,6 @@ sealed class ViewState {
         val moviesList: List<MovieInfo>,
         val isNeedToLoadMoreMovies: Boolean,
     ) : ViewState()
-
     object Loading : ViewState()
 }
 
@@ -57,7 +56,6 @@ class MoviesViewModel : ViewModel() {
                         page = pageNumber,
                         limit = limitOfMoviesOnPage
                     ),
-
                 )
             }
         }
