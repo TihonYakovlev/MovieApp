@@ -20,20 +20,9 @@ data class MovieInfo(
     val poster: String,
 )
 
-sealed class ViewState {
-    data object EmptyScreen : ViewState()
-    data class MoviesScreenState(
-        val moviesList: List<MovieInfo>,
-        val isNeedToLoadMoreMovies: Boolean,
-    ) : ViewState()
-
-    data object Loading : ViewState()
-}
-
 data class MoviesScreenState(
     val moviesList: List<MovieInfo> = emptyList(),
     val isLoading: Boolean = true,
-    val isNeedToLoadMoreMovies: Boolean = false,
 )
 
 class MoviesViewModel : ViewModel() {

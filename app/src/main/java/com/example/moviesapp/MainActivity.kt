@@ -13,57 +13,62 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import com.example.moviesapp.presentation.AppNavigation
 import com.example.moviesapp.presentation.screens.MoviesListScreen
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.example.moviesapp.viewmodels.MoviesViewModel
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val viewModel: MoviesViewModel by viewModels()
 
-            MoviesAppTheme {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = {
-                                Text("Movies")
-                            }
-                        )
-                    },
-                    bottomBar = {
-                        BottomAppBar(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.primary,
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                textAlign = TextAlign.Center,
-                                text = "Bottom app bar",
-                            )
-                        }
-                    },
-                    content = { innerPadding ->
-                        //  val coroutineScope = rememberCoroutineScope()
-                        //     val moviesScreenState = viewModel.movies.collectAsState()
+            MoviesApp(viewModel = viewModel)
+
+        }
+    }
+}
 
 
-                        MoviesListScreen(
-                            modifier = Modifier
-                                .systemBarsPadding()
-                                .padding(paddingValues = innerPadding),
-                            //   screenState = moviesScreenState.value,
-                            viewModel = viewModel
-                        )
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoviesApp(viewModel: MoviesViewModel) {
+
+    MoviesAppTheme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text("Movies")
                     }
                 )
+            },
+            bottomBar = {
+                BottomAppBar(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = "Bottom app bar",
+                    )
+                }
+            },
+            content = { innerPadding ->
+                AppNavigation(
+                    modifier = Modifier
+                        .systemBarsPadding()
+                        .padding(paddingValues = innerPadding),
+                    viewModel = viewModel
+                )
             }
-        }
+        )
     }
 }
 

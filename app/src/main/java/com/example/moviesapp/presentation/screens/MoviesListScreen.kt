@@ -2,7 +2,7 @@ package com.example.moviesapp.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -24,14 +23,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,14 +35,14 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.example.moviesapp.presentation.Routes
 import com.example.moviesapp.viewmodels.MovieInfo
 import com.example.moviesapp.viewmodels.MoviesViewModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @Composable
-fun MoviesListScreen(modifier: Modifier, viewModel: MoviesViewModel) {
+fun MoviesListScreen(modifier: Modifier, viewModel: MoviesViewModel, navController: NavController) {
 
     val screenState by viewModel.movies.collectAsStateWithLifecycle()
     val listState = rememberLazyGridState()
@@ -64,14 +58,14 @@ fun MoviesListScreen(modifier: Modifier, viewModel: MoviesViewModel) {
     }
 
     LaunchedEffect(isScrolledToEnd.value) {
-        if(isScrolledToEnd.value){
+        if (isScrolledToEnd.value) {
             viewModel.loadNextPage()
         }
     }
 
     if (screenState.isLoading) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
@@ -84,12 +78,12 @@ fun MoviesListScreen(modifier: Modifier, viewModel: MoviesViewModel) {
             state = listState
         ) {
             itemsIndexed(screenState.moviesList) { _, movie ->
-                MovieCard(movie)
+                MovieCard(movie, navController)
             }
             item {
                 if (isScrolledToEnd.value) {
                     Box(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
@@ -101,14 +95,17 @@ fun MoviesListScreen(modifier: Modifier, viewModel: MoviesViewModel) {
 }
 
 @Composable
-fun MovieCard(movie: MovieInfo) {
+fun MovieCard(movie: MovieInfo, navController: NavController) {
     val moviePoster = rememberImagePainter(data = movie.poster)
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .requiredHeight(150.dp)
-            .padding(4.dp),
+            .padding(4.dp)
+            .clickable {
+                navController.navigate(route = Routes.MovieDetailsScreen + "/${movie.id}")
+            },
         // .background(color = Color.White),
         colors = CardColors(
             contentColor = Color.Black,
