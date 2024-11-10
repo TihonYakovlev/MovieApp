@@ -1,6 +1,5 @@
 package com.example.moviesapp
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,20 +13,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.example.moviesapp.presentation.screens.MoviesListScreen
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.example.moviesapp.viewmodels.MoviesViewModel
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +33,6 @@ class MainActivity : ComponentActivity() {
                             title = {
                                 Text("Movies")
                             }
-
                         )
                     },
                     bottomBar = {
@@ -58,28 +49,16 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     content = { innerPadding ->
-                        val coroutineScope = rememberCoroutineScope()
-                        val moviesScreenState = viewModel.movies.collectAsState()
-                        var page = remember { mutableIntStateOf(1) }
-                        var onLoadMore = {
-                            coroutineScope.launch {
-                                viewModel.fetchMoviesList(
-                                    pageNumber = page.intValue,
-                                    limitOfMoviesOnPage = 10
-                                )
-                            }
-                            page.intValue++
-                        }
+                        //  val coroutineScope = rememberCoroutineScope()
+                        //     val moviesScreenState = viewModel.movies.collectAsState()
 
-                        LaunchedEffect(key1 = Unit) {
-                            onLoadMore()
-                        }
+
                         MoviesListScreen(
                             modifier = Modifier
                                 .systemBarsPadding()
                                 .padding(paddingValues = innerPadding),
-                            screenState = moviesScreenState.value,
-                            onLoadMore = onLoadMore
+                            //   screenState = moviesScreenState.value,
+                            viewModel = viewModel
                         )
                     }
                 )

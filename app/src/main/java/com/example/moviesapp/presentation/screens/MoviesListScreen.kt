@@ -22,9 +22,14 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,11 +40,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.moviesapp.viewmodels.MovieInfo
-import com.example.moviesapp.viewmodels.MoviesScreenState
+import com.example.moviesapp.viewmodels.MoviesViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun MoviesListScreen(modifier: Modifier, screenState: MoviesScreenState, onLoadMore: () -> Int) {
-
+fun MoviesListScreen(modifier: Modifier, viewModel: MoviesViewModel) {
+    val coroutineScope = rememberCoroutineScope()
+    val screenState = viewModel.movies.collectAsState()
+    val page = remember { mutableStateOf(1) }
+    val loading = remember { mutableStateOf(false) }
+    val itemList = remember { mutableStateListOf<MovieInfo>() }
     val listState = rememberLazyGridState()
     val isScrollToEnd by remember {
         derivedStateOf {
@@ -47,23 +57,41 @@ fun MoviesListScreen(modifier: Modifier, screenState: MoviesScreenState, onLoadM
         }
     }
 
-    if (isScrollToEnd) {
-        onLoadMore()
-    }
-    if (!screenState.isMoviesLoaded) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator(modifier = Modifier.then(Modifier.size(32.dp)))
+    LaunchedEffect(key1 = page.value) {
+        loading.value = true
+        coroutineScope.launch {
+            viewModel.fetchMoviesList(
+                pageNumber = page.value, limitOfMoviesOnPage = 10
+            )
         }
-    } else {
-        LazyVerticalGrid(
-            GridCells.Adaptive(300.dp),
-            contentPadding = PaddingValues(4.dp),
-            modifier = modifier,
-            state = listState,
-        ) {
-            itemsIndexed(screenState.moviesList) { _, movie ->
-                MovieCard(movie)
+        loading.value = false
+    }
+
+    LazyVerticalGrid(
+        GridCells.Adaptive(300.dp),
+        contentPadding = PaddingValues(4.dp),
+        modifier = modifier,
+        state = listState,
+    ) {
+        itemList.addAll(screenState.value.moviesList)
+
+        itemsIndexed(itemList) { _, movie ->
+            MovieCard(movie)
+        }
+
+        item {
+            if (loading.value) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(modifier = Modifier.then(Modifier.size(32.dp)))
+                }
             }
+        }
+    }
+
+    LaunchedEffect(isScrollToEnd) {
+
+        if (isScrollToEnd) {
+            page.value++
         }
     }
 }
@@ -83,10 +111,11 @@ fun MovieCard(movie: MovieInfo) {
             disabledContentColor = Color.Black,
             containerColor = Color.White,
             disabledContainerColor = Color.Red
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+        ), elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
+
         Row {
+
             Image(
                 painter = moviePoster,
                 contentDescription = "Poster",
@@ -108,7 +137,9 @@ fun MovieCard(movie: MovieInfo) {
                 )
                 Text(text = movie.alternativeName, fontStyle = FontStyle.Italic)
             }
+
             Text(text = movie.rating.toString())
+
         }
     }
 }
