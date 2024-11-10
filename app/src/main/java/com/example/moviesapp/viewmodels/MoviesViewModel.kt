@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviesapp.repository.Repository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,17 +21,18 @@ data class MovieInfo(
 )
 
 sealed class ViewState {
-    object EmptyScreen : ViewState()
+    data object EmptyScreen : ViewState()
     data class MoviesScreenState(
         val moviesList: List<MovieInfo>,
         val isNeedToLoadMoreMovies: Boolean,
     ) : ViewState()
 
-    object Loading : ViewState()
+    data object Loading : ViewState()
 }
 
 data class MoviesScreenState(
     val moviesList: List<MovieInfo> = emptyList(),
+    val isLoading: Boolean = true,
     val isNeedToLoadMoreMovies: Boolean = false,
 )
 
@@ -40,26 +42,28 @@ class MoviesViewModel : ViewModel() {
     val movies: StateFlow<MoviesScreenState>
         get() = _movies.asStateFlow()
 
-//    private val _movies = MutableStateFlow<ViewState>(ViewState.Loading)
-//    val movies: StateFlow<ViewState>
-//        get() = _movies.asStateFlow()
+    private var page: Int = INITIAL_PAGE
 
     private val repository = Repository()
 
-    private val lists = mutableListOf<MovieInfo>()
-    private var pageNo = 1
-
-    fun fetchMoviesList(pageNumber: Int, limitOfMoviesOnPage: Int) {
+    fun loadNextPage() {
         viewModelScope.launch {
-            _movies.update {
-                MoviesScreenState(
-                    moviesList = repository.getMovies(
-                        page = pageNumber,
-                        limit = limitOfMoviesOnPage
-                    ),
-
+            val movies = repository.getMovies(
+                page = page,
+                limit = PAGE_SIZE
+            )
+            _movies.update { state ->
+                state.copy(
+                    moviesList = state.moviesList + movies,
+                    isLoading = false
                 )
             }
+            page++
         }
+    }
+
+    private companion object {
+        const val PAGE_SIZE = 10
+        const val INITIAL_PAGE = 1
     }
 }

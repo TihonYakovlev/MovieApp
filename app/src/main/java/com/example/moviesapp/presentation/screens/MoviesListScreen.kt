@@ -2,6 +2,7 @@ package com.example.moviesapp.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,6 +31,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,60 +40,62 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberImagePainter
 import com.example.moviesapp.viewmodels.MovieInfo
 import com.example.moviesapp.viewmodels.MoviesViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
 fun MoviesListScreen(modifier: Modifier, viewModel: MoviesViewModel) {
-    val coroutineScope = rememberCoroutineScope()
-    val screenState = viewModel.movies.collectAsState()
-    val page = remember { mutableStateOf(1) }
-    val loading = remember { mutableStateOf(false) }
-    val itemList = remember { mutableStateListOf<MovieInfo>() }
+
+    val screenState by viewModel.movies.collectAsStateWithLifecycle()
     val listState = rememberLazyGridState()
-    val isScrollToEnd by remember {
+
+    val isScrolledToEnd = remember {
         derivedStateOf {
             listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == listState.layoutInfo.totalItemsCount - 1
         }
     }
 
-    LaunchedEffect(key1 = page.value) {
-        loading.value = true
-        coroutineScope.launch {
-            viewModel.fetchMoviesList(
-                pageNumber = page.value, limitOfMoviesOnPage = 10
-            )
-        }
-        loading.value = false
+    LaunchedEffect(Unit) {
+        viewModel.loadNextPage()
     }
 
-    LazyVerticalGrid(
-        GridCells.Adaptive(300.dp),
-        contentPadding = PaddingValues(4.dp),
-        modifier = modifier,
-        state = listState,
-    ) {
-        itemList.addAll(screenState.value.moviesList)
-
-        itemsIndexed(itemList) { _, movie ->
-            MovieCard(movie)
+    LaunchedEffect(isScrolledToEnd.value) {
+        if(isScrolledToEnd.value){
+            viewModel.loadNextPage()
         }
+    }
 
-        item {
-            if (loading.value) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(modifier = Modifier.then(Modifier.size(32.dp)))
+    if (screenState.isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(300.dp),
+            contentPadding = PaddingValues(4.dp),
+            modifier = modifier,
+            state = listState
+        ) {
+            itemsIndexed(screenState.moviesList) { _, movie ->
+                MovieCard(movie)
+            }
+            item {
+                if (isScrolledToEnd.value) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
-        }
-    }
-
-    LaunchedEffect(isScrollToEnd) {
-
-        if (isScrollToEnd) {
-            page.value++
         }
     }
 }
