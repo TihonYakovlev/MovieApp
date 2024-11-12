@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
@@ -36,7 +37,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import com.example.moviesapp.R
 import com.example.moviesapp.presentation.Routes
 import com.example.moviesapp.viewmodels.MovieInfo
 import com.example.moviesapp.viewmodels.MoviesViewModel
@@ -96,8 +100,14 @@ fun MoviesListScreen(modifier: Modifier, viewModel: MoviesViewModel, navControll
 
 @Composable
 fun MovieCard(movie: MovieInfo, navController: NavController) {
-    val moviePoster = rememberImagePainter(data = movie.poster)
+    val moviePoster = rememberAsyncImagePainter(
+        if (movie.poster != ""){
+            movie.poster
+        } else {
+            R.drawable.no_foto
+        }
 
+    )
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -120,7 +130,7 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
             Image(
                 painter = moviePoster,
                 contentDescription = "Poster",
-                modifier = Modifier.width(100.dp)
+                modifier = Modifier.width(100.dp),
             )
 
             Column(

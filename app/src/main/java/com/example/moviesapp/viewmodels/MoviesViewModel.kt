@@ -18,24 +18,6 @@ data class MovieInfo(
     val poster: String,
 )
 
-data class MovieDetails(
-    val id: Int,
-    val name: String,
-    val alternativeName: String,
-    val description: String,
-    val rating: Double,
-    val year: Int,
-    val country: String,
-    val ageRating: Int,
-    val type: String,
-    val genres: List<String>,
-    val movieLength: Int,
-    val votes: Int,
-    val logo: String,
-    val backdrop: String,
-    val poster: String,
-)
-
 data class MoviesScreenState(
     val moviesList: List<MovieInfo> = emptyList(),
     var searchedMoviesList: List<MovieInfo> = emptyList(),

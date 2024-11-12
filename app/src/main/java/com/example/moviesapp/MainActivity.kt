@@ -83,12 +83,12 @@ fun MoviesApp(viewModel: MoviesViewModel, detailsViewModel: MovieDetailsViewMode
                         }
 
                         IconButton(onClick = {
-                            isSearchClicked = true
+                            isSearchClicked = !isSearchClicked
                             if (searchValue.isNotEmpty()) {
                                 viewModel.createNewSearch()
                                 navController.navigate(route = Routes.SearchedMoviesScreen + "/${searchValue}")
-
                             }
+                            searchValue = ""
                         }) { Icon(Icons.Filled.Search, contentDescription = "Поиск") }
                     }
                     //   colors = TopAppBarColors()

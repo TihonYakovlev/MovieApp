@@ -37,5 +37,25 @@ class Repository {
         }
     }
 
+    suspend fun getMovieById(id: Int): MovieDetails{
+        val details = RetrofitInstance.api.getMovieById(id)
+        return MovieDetails(
+            id = details.id ?: -1,
+            name = details.name ?: "",
+            alternativeName = details.alternativeName ?: "",
+            description = details.description ?: "",
+            ageRating = details.ageRating ?: -1,
+            countries = details.countries?.map { it.name } ?: emptyList(),
+            genres = details.genres?.map { it.name } ?: emptyList(),
+            logo = details.logo?.url ?: "",
+            movieLength = details.movieLength ?: -1,
+            persons = details.persons ?: emptyList(),
+            rating = details.rating?.imdb ?: -1.0,
+            type = details.type ?: "",
+            votes = details.votes?.imdb ?: -1,
+            year = details.year ?: -1
+        )
+    }
+
 }
 

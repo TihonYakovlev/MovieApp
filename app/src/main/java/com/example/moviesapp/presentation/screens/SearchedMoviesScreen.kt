@@ -34,14 +34,10 @@ fun SearchedMoviesScreen(modifier: Modifier, viewModel: MoviesViewModel, navCont
     }
 
     LaunchedEffect(Unit) {
-        println("Вызвался запрос из лаунчд эффект юнит")
         viewModel.loadNextSearchedPage(query)
     }
 
     LaunchedEffect(isScrolledToEnd.value) {
-
-        println("Вызвался запрос из лаунчд эффект ${isScrolledToEnd.value}")
-
         if (isScrolledToEnd.value && !screenState.isLoading) {
             viewModel.loadNextSearchedPage(query)
         }
