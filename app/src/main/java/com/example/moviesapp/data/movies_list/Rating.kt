@@ -1,4 +1,4 @@
-package com.example.moviesapp.data
+package com.example.moviesapp.data.movies_list
 
 data class Rating(
     val await: Double?,

@@ -1,4 +1,4 @@
-package com.example.moviesapp.data
+package com.example.moviesapp.data.movies_list
 
 data class Doc(
     val id: Int,
@@ -7,5 +7,5 @@ data class Doc(
     val genre: Genre?,
     val rating: Rating?,
     val releaseYear: ReleaseYear?,
-    val poster: Poster,
+    val poster: Poster?,
 )

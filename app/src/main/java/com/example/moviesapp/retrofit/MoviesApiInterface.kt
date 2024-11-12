@@ -1,17 +1,28 @@
 package com.example.moviesapp.retrofit
 
-import com.example.moviesapp.data.Movies
-import retrofit2.Response
+import com.example.moviesapp.data.movies_list.Movies
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
 interface MoviesApi {
-    @Headers("X-API-KEY: HGDBFW5-MN44TNG-QEMC24G-SQWD7D7", "accept: application/json")
+    @Headers("X-API-KEY: $API_KEY", "accept: application/json")
     @GET("movie")
     suspend fun getMoviesList(
         @Query("page") page: String,
         @Query("limit") limit: String,
-        @Query("notNullFields") notNullFields: String,
-        ): Movies
+    ): Movies
+
+    @Headers("X-API-KEY: $API_KEY", "accept: application/json")
+    @GET("movie/search")
+    suspend fun getMoviesBySearch(
+        @Query("page") page: String,
+        @Query("limit") limit: String,
+        @Query("query") notNullFields: String,
+    ): Movies
+
+    private companion object {
+        private const val API_KEY = "HGDBFW5-MN44TNG-QEMC24G-SQWD7D7"
+    }
 }
+

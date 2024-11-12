@@ -1,10 +1,8 @@
 package com.example.moviesapp.viewmodels
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviesapp.repository.Repository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,9 +18,28 @@ data class MovieInfo(
     val poster: String,
 )
 
+data class MovieDetails(
+    val id: Int,
+    val name: String,
+    val alternativeName: String,
+    val description: String,
+    val rating: Double,
+    val year: Int,
+    val country: String,
+    val ageRating: Int,
+    val type: String,
+    val genres: List<String>,
+    val movieLength: Int,
+    val votes: Int,
+    val logo: String,
+    val backdrop: String,
+    val poster: String,
+)
+
 data class MoviesScreenState(
     val moviesList: List<MovieInfo> = emptyList(),
-    val isLoading: Boolean = true,
+    val searchedMoviesList: List<MovieInfo> = emptyList(),
+    var isLoading: Boolean = true,
 )
 
 class MoviesViewModel : ViewModel() {
@@ -32,27 +49,42 @@ class MoviesViewModel : ViewModel() {
         get() = _movies.asStateFlow()
 
     private var page: Int = INITIAL_PAGE
+    private var searchedPage: Int = INITIAL_SEARCHED_PAGE
 
     private val repository = Repository()
 
     fun loadNextPage() {
         viewModelScope.launch {
             val movies = repository.getMovies(
-                page = page,
-                limit = PAGE_SIZE
+                page = page, limit = PAGE_SIZE
             )
             _movies.update { state ->
                 state.copy(
-                    moviesList = state.moviesList + movies,
-                    isLoading = false
+                    moviesList = state.moviesList + movies, isLoading = false
                 )
             }
             page++
         }
     }
 
+    fun loadNextSearchedPage(query: String) {
+        viewModelScope.launch {
+            _movies.value.isLoading = true
+            val searchedMovies =
+                repository.getMoviesBySearch(page = searchedPage, limit = PAGE_SIZE, search = query)
+            _movies.update { state ->
+                state.copy(
+                    searchedMoviesList = state.searchedMoviesList + searchedMovies,
+                    isLoading = false
+                )
+            }
+            searchedPage++
+        }
+    }
+
     private companion object {
         const val PAGE_SIZE = 10
         const val INITIAL_PAGE = 1
+        const val INITIAL_SEARCHED_PAGE = 1
     }
 }
