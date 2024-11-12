@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.moviesapp.viewmodels.MoviesViewModel
-import retrofit2.http.Query
 
 @Composable
 fun SearchedMoviesScreen(modifier: Modifier, viewModel: MoviesViewModel, navController: NavController, query: String) {
@@ -35,11 +34,15 @@ fun SearchedMoviesScreen(modifier: Modifier, viewModel: MoviesViewModel, navCont
     }
 
     LaunchedEffect(Unit) {
+        println("Вызвался запрос из лаунчд эффект юнит")
         viewModel.loadNextSearchedPage(query)
     }
 
     LaunchedEffect(isScrolledToEnd.value) {
-        if (isScrolledToEnd.value) {
+
+        println("Вызвался запрос из лаунчд эффект ${isScrolledToEnd.value}")
+
+        if (isScrolledToEnd.value && !screenState.isLoading) {
             viewModel.loadNextSearchedPage(query)
         }
     }

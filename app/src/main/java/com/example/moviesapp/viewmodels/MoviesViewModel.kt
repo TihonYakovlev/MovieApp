@@ -38,7 +38,7 @@ data class MovieDetails(
 
 data class MoviesScreenState(
     val moviesList: List<MovieInfo> = emptyList(),
-    val searchedMoviesList: List<MovieInfo> = emptyList(),
+    var searchedMoviesList: List<MovieInfo> = emptyList(),
     var isLoading: Boolean = true,
 )
 
@@ -67,9 +67,14 @@ class MoviesViewModel : ViewModel() {
         }
     }
 
+    fun createNewSearch(){
+        _movies.value.isLoading = true
+        searchedPage = INITIAL_SEARCHED_PAGE
+        _movies.value.searchedMoviesList = emptyList()
+    }
+
     fun loadNextSearchedPage(query: String) {
         viewModelScope.launch {
-            _movies.value.isLoading = true
             val searchedMovies =
                 repository.getMoviesBySearch(page = searchedPage, limit = PAGE_SIZE, search = query)
             _movies.update { state ->
