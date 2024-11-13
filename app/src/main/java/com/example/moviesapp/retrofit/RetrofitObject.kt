@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
-    private const val BASE_URL = "https://api.kinopoisk.dev/v1.4/"
+    private const val BASE_URL = "https://api.kinopoisk.dev/"
 
     private val okHttpClient = OkHttpClient().newBuilder()
         .addInterceptor(HttpLoggingInterceptor().apply {

@@ -57,5 +57,10 @@ class Repository {
         )
     }
 
+    suspend fun getAllCountries(): List<String>{
+        val countries = RetrofitInstance.api.getPossibleCountries(field = "countries.name")
+        return countries.map { it.name }
+    }
+
 }
 

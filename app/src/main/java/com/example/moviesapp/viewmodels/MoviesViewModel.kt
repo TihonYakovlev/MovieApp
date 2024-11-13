@@ -35,42 +35,92 @@ class MoviesViewModel : ViewModel() {
 
     private val repository = Repository()
 
+    private val _allCountries = MutableStateFlow(emptyList<String>())
+    val allCountries: StateFlow<List<String>>
+        get() = _allCountries.asStateFlow()
+
+    var selectedCountries = mutableListOf("")
+
     fun loadNextPage() {
+
+
         viewModelScope.launch {
-            val movies = repository.getMovies(
-                page = page, limit = PAGE_SIZE
-            )
-            _movies.update { state ->
-                state.copy(
-                    moviesList = state.moviesList + movies, isLoading = false
+
+            try {
+                val movies = repository.getMovies(
+                    page = page, limit = PAGE_SIZE
                 )
+                _movies.update { state ->
+                    state.copy(
+                        moviesList = state.moviesList + movies, isLoading = false
+                    )
+                }
+                page++
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            page++
+
+
         }
     }
 
-    fun createNewSearch(){
+    fun createNewSearch() {
         _movies.value.isLoading = true
         searchedPage = INITIAL_SEARCHED_PAGE
         _movies.value.searchedMoviesList = emptyList()
     }
 
     fun loadNextSearchedPage(query: String) {
+
+
+
         viewModelScope.launch {
-            val searchedMovies =
-                repository.getMoviesBySearch(page = searchedPage, limit = PAGE_SIZE, search = query)
-            _movies.update { state ->
-                state.copy(
-                    searchedMoviesList = state.searchedMoviesList + searchedMovies,
-                    isLoading = false
-                )
+
+            try {
+                val searchedMovies =
+                    repository.getMoviesBySearch(page = searchedPage, limit = PAGE_SIZE, search = query)
+                _movies.update { state ->
+                    state.copy(
+                        searchedMoviesList = state.searchedMoviesList + searchedMovies,
+                        isLoading = false
+                    )
+                }
+                searchedPage++
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            searchedPage++
+
+
         }
     }
 
+    fun getAllCountries() {
+        viewModelScope.launch {
+
+
+            try {
+                val gettingCountries = repository.getAllCountries()
+                _allCountries.update {
+                    gettingCountries
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+
+        }
+    }
+
+    fun removeFromChosenCountries(country: String) {
+        selectedCountries.add(country)
+    }
+
+    fun addToChosenCountries(country: String) {
+        selectedCountries.remove(country)
+    }
+
     private companion object {
-        const val PAGE_SIZE = 10
+        const val PAGE_SIZE = 20
         const val INITIAL_PAGE = 1
         const val INITIAL_SEARCHED_PAGE = 1
     }
