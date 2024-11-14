@@ -8,7 +8,7 @@ data class MovieDetailsApi(
     val ageRating: Int?,
     val countries: List<Country>?,
     val genres: List<Genre>?,
-    val logo: Logo?,
+    val poster: Logo?,
     val movieLength: Int?,
     val persons: List<Person>?,
     val rating: Rating?,

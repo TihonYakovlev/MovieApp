@@ -33,7 +33,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.moviesapp.presentation.Routes
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.example.moviesapp.viewmodels.MoviesViewModel
 
@@ -85,8 +84,6 @@ fun SearchedMoviesScreen(viewModel: MoviesViewModel, navController: NavControlle
             }
         )
     }
-
-
 }
 
 @Composable
@@ -119,24 +116,30 @@ fun SearchedMoviesListScreenContent(
         }
     }
 
-    if (screenState.isLoading) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-    } else {
+
         LazyVerticalGrid(
             columns = GridCells.Adaptive(300.dp),
             contentPadding = PaddingValues(4.dp),
             modifier = modifier,
             state = listState
         ) {
-            itemsIndexed(screenState.searchedMoviesList) { _, movie ->
-                MovieCard(movie, navController)
+
+            if (screenState.isLoading) {
+                item {
+                    Box(
+                        modifier = modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            } else {
+                itemsIndexed(screenState.searchedMoviesList) { _, movie ->
+                    MovieCard(movie, navController)
+                }
             }
-            if (isScrolledToEnd.value) {
+
+            if (isScrolledToEnd.value && screenState.isLoading) {
                 item {
                     Box(
                         modifier = modifier.fillMaxWidth(),
@@ -147,5 +150,4 @@ fun SearchedMoviesListScreenContent(
                 }
             }
         }
-    }
 }

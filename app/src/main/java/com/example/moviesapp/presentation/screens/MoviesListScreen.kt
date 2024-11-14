@@ -31,7 +31,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -50,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.compose.rememberAsyncImagePainter
 import com.example.moviesapp.R
 import com.example.moviesapp.presentation.Routes
@@ -115,7 +113,7 @@ fun MoviesListScreen(viewModel: MoviesViewModel, navController: NavController) {
                 }
             },
             content = { innerPadding ->
-                MoviesListScreenContetnt(
+                MoviesListScreenContent(
                     viewModel = viewModel,
                     modifier = Modifier
                         .padding(innerPadding)
@@ -128,7 +126,7 @@ fun MoviesListScreen(viewModel: MoviesViewModel, navController: NavController) {
 }
 
 @Composable
-fun MoviesListScreenContetnt(
+fun MoviesListScreenContent(
     viewModel: MoviesViewModel,
     modifier: Modifier,
     navController: NavController
@@ -194,8 +192,8 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
         } else {
             R.drawable.no_foto
         }
-
     )
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -236,9 +234,10 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(text = movie.alternativeName, fontStyle = FontStyle.Italic)
+                Text(text = "${movie.genre}, ${movie.year}")
             }
 
-            Text(text = movie.rating.toString())
+            Text(text = movie.rating)
 
         }
     }

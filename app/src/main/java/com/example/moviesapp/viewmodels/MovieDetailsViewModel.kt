@@ -20,11 +20,18 @@ data class MovieDetails(
     val genres: List<String>,
     val logo: String,
     val movieLength: Int,
-    val persons: List<Person>,
+    val persons: List<People>,
     val rating: Double,
     val type: String,
     val votes: Int,
     val year: Int,
+)
+
+data class People(
+    val description: String,
+    val name: String,
+    val photo: String,
+    val profession: String
 )
 
 data class DetailsScreenState(
@@ -59,7 +66,6 @@ class MovieDetailsViewModel : ViewModel() {
         viewModelScope.launch {
             runCatching {
                 val details = repository.getMovieById(id)
-                println("Logo: $details")
                 _details.update { state ->
                     state.copy(movieDetails = details, isLoading = false)
                 }

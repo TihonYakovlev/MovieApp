@@ -13,8 +13,9 @@ data class MovieInfo(
     val id: Int,
     val alternativeName: String,
     val name: String,
-    val rating: Double,
-    val releaseYear: Int,
+    val genre: String,
+    val rating: String,
+    val year: String,
     val poster: String,
 )
 
@@ -22,7 +23,7 @@ data class MoviesScreenState(
     val moviesList: List<MovieInfo> = emptyList(),
     val searchedMoviesList: List<MovieInfo> = emptyList(),
     val isLoading: Boolean = true,
-    val isNeedLoadFirstPage: Boolean = true
+    val isNeedLoadFirstPage: Boolean = true,
 )
 
 class MoviesViewModel : ViewModel() {
