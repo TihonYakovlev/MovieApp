@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.compose.rememberAsyncImagePainter
 import com.example.moviesapp.R
 import com.example.moviesapp.presentation.Routes
@@ -72,36 +73,33 @@ fun MoviesListScreen(viewModel: MoviesViewModel, navController: NavController) {
     MoviesAppTheme {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = {
-                        if (!isSearchClicked)
-                            Text("Movies")
-                    },
-                    actions = {
-                        SearchBar(
-                            query = searchValue,
-                            onQueryChange = { newQuery ->
-                                searchValue = newQuery
-                            },
-                            onSearch = {
-                                if (searchValue.isNotEmpty()) {
-                                    viewModel.createNewSearch()
-                                    navController.navigate(route = Routes.SearchedMoviesScreen + "/${searchValue}")
-                                }
-                            },
-                            active = false,
-                            onActiveChange = {},
-                            placeholder = { Text(text = "Поиск...") },
-
-                            ) {
-
-                        }
-                        IconButton(onClick = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    SearchBar(
+                        query = searchValue,
+                        onQueryChange = { newQuery ->
+                            searchValue = newQuery
+                        },
+                        onSearch = {
+                            if (searchValue.isNotEmpty()) {
+                                navController.navigate(route = Routes.SearchedMoviesScreen + "/${searchValue}")
+                            }
+                        },
+                        active = false,
+                        onActiveChange = {},
+                        placeholder = { Text(text = "Поиск...") },
+                        content = {}
+                    )
+                    IconButton(
+                        onClick = {
                             navController.navigate(Routes.FiltersScreen)
-                        }) { Icon(Icons.AutoMirrored.TwoTone.List, contentDescription = "Фильтры") }
+                        }
+                    ) {
+                        Icon(Icons.AutoMirrored.TwoTone.List, contentDescription = "Фильтры")
                     }
-                    //   colors = TopAppBarColors()
-                )
+                }
             },
             bottomBar = {
                 BottomAppBar(
@@ -145,7 +143,9 @@ fun MoviesListScreenContetnt(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.loadNextPage()
+        if (screenState.isNeedLoadFirstPage) {
+            viewModel.loadNextPage()
+        }
     }
 
     LaunchedEffect(isScrolledToEnd.value) {
@@ -225,6 +225,7 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
                 modifier = Modifier
                     .background(color = Color.White)
                     .padding(10.dp)
+                    .weight(1f, fill = false)
             ) {
                 Text(
                     text = movie.name,
@@ -232,7 +233,7 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
                     fontSize = 20.sp,
                     letterSpacing = TextUnit.Unspecified,
                     maxLines = 1,
-                    overflow = TextOverflow.Visible
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(text = movie.alternativeName, fontStyle = FontStyle.Italic)
             }

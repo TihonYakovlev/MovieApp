@@ -20,8 +20,9 @@ data class MovieInfo(
 
 data class MoviesScreenState(
     val moviesList: List<MovieInfo> = emptyList(),
-    var searchedMoviesList: List<MovieInfo> = emptyList(),
-    var isLoading: Boolean = true,
+    val searchedMoviesList: List<MovieInfo> = emptyList(),
+    val isLoading: Boolean = true,
+    val isNeedLoadFirstPage: Boolean = true
 )
 
 class MoviesViewModel : ViewModel() {
@@ -48,7 +49,8 @@ class MoviesViewModel : ViewModel() {
                 )
                 _movies.update { state ->
                     state.copy(
-                        moviesList = state.moviesList + movies, isLoading = false
+                        moviesList = state.moviesList + movies, isLoading = false,
+                        isNeedLoadFirstPage = false
                     )
                 }
                 page++
@@ -56,12 +58,6 @@ class MoviesViewModel : ViewModel() {
                 e.printStackTrace()
             }
         }
-    }
-
-    fun createNewSearch() {
-        _movies.value.isLoading = true
-        searchedPage = INITIAL_SEARCHED_PAGE
-        _movies.value.searchedMoviesList = emptyList()
     }
 
     fun loadNextSearchedPage(query: String) {
@@ -105,6 +101,13 @@ class MoviesViewModel : ViewModel() {
 
     fun addToChosenCountries(country: String) {
         selectedCountries.remove(country)
+    }
+
+    fun clearSearch(){
+        searchedPage = INITIAL_PAGE
+        _movies.update { state ->
+            state.copy(searchedMoviesList = emptyList())
+        }
     }
 
     private companion object {

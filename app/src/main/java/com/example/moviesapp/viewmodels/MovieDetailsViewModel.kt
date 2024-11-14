@@ -18,7 +18,7 @@ data class MovieDetails(
     val ageRating: Int,
     val countries: List<String>,
     val genres: List<String>,
-    val logo: String?,
+    val logo: String,
     val movieLength: Int,
     val persons: List<Person>,
     val rating: Double,
@@ -56,15 +56,14 @@ class MovieDetailsViewModel : ViewModel() {
     private val repository = Repository()
 
     fun getDetails(id: Int) {
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            runCatching {
                 val details = repository.getMovieById(id)
+                println("Logo: $details")
                 _details.update { state ->
                     state.copy(movieDetails = details, isLoading = false)
                 }
             }
-        } catch (e: Exception){
-            e.printStackTrace()
         }
     }
 }

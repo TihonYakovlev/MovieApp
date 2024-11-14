@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -100,17 +101,21 @@ fun SearchedMoviesListScreenContent(
 
     val isScrolledToEnd = remember {
         derivedStateOf {
-            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == listState.layoutInfo.totalItemsCount - 1
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.let { item ->
+                item.index == listState.layoutInfo.totalItemsCount - 1
+            } ?: true
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.loadNextSearchedPage(query)
+    LaunchedEffect(isScrolledToEnd.value) {
+        if (isScrolledToEnd.value) {
+            viewModel.loadNextSearchedPage(query)
+        }
     }
 
-    LaunchedEffect(isScrolledToEnd.value) {
-        if (isScrolledToEnd.value && !screenState.isLoading) {
-            viewModel.loadNextSearchedPage(query)
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.clearSearch()
         }
     }
 
@@ -131,8 +136,8 @@ fun SearchedMoviesListScreenContent(
             itemsIndexed(screenState.searchedMoviesList) { _, movie ->
                 MovieCard(movie, navController)
             }
-            item {
-                if (isScrolledToEnd.value) {
+            if (isScrolledToEnd.value) {
+                item {
                     Box(
                         modifier = modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center
