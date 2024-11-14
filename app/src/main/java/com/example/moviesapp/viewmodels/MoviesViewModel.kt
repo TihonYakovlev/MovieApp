@@ -25,7 +25,6 @@ data class MoviesScreenState(
 )
 
 class MoviesViewModel : ViewModel() {
-
     private val _movies = MutableStateFlow(MoviesScreenState())
     val movies: StateFlow<MoviesScreenState>
         get() = _movies.asStateFlow()
@@ -42,10 +41,7 @@ class MoviesViewModel : ViewModel() {
     var selectedCountries = mutableListOf("")
 
     fun loadNextPage() {
-
-
         viewModelScope.launch {
-
             try {
                 val movies = repository.getMovies(
                     page = page, limit = PAGE_SIZE
@@ -59,8 +55,6 @@ class MoviesViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-
         }
     }
 
@@ -71,14 +65,14 @@ class MoviesViewModel : ViewModel() {
     }
 
     fun loadNextSearchedPage(query: String) {
-
-
-
         viewModelScope.launch {
-
             try {
                 val searchedMovies =
-                    repository.getMoviesBySearch(page = searchedPage, limit = PAGE_SIZE, search = query)
+                    repository.getMoviesBySearch(
+                        page = searchedPage,
+                        limit = PAGE_SIZE,
+                        search = query
+                    )
                 _movies.update { state ->
                     state.copy(
                         searchedMoviesList = state.searchedMoviesList + searchedMovies,
@@ -89,15 +83,11 @@ class MoviesViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-
         }
     }
 
     fun getAllCountries() {
         viewModelScope.launch {
-
-
             try {
                 val gettingCountries = repository.getAllCountries()
                 _allCountries.update {
@@ -106,8 +96,6 @@ class MoviesViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-
         }
     }
 
@@ -120,7 +108,7 @@ class MoviesViewModel : ViewModel() {
     }
 
     private companion object {
-        const val PAGE_SIZE = 20
+        const val PAGE_SIZE = 10
         const val INITIAL_PAGE = 1
         const val INITIAL_SEARCHED_PAGE = 1
     }

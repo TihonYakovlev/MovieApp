@@ -56,13 +56,15 @@ class MovieDetailsViewModel : ViewModel() {
     private val repository = Repository()
 
     fun getDetails(id: Int) {
-        viewModelScope.launch {
-            val details = repository.getMovieById(id)
-            _details.update { state ->
-                state.copy(movieDetails = details, isLoading = false)
+        try {
+            viewModelScope.launch {
+                val details = repository.getMovieById(id)
+                _details.update { state ->
+                    state.copy(movieDetails = details, isLoading = false)
+                }
             }
+        } catch (e: Exception){
+            e.printStackTrace()
         }
-
     }
-
 }
