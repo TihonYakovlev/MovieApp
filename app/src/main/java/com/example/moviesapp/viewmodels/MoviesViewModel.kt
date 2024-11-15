@@ -21,7 +21,7 @@ data class MovieInfo(
 
 data class MoviesScreenState(
     val moviesList: List<MovieInfo> = emptyList(),
-    val searchedMoviesList: List<MovieInfo> = emptyList(),
+    val countries: List<String> = emptyList(),
     val isLoading: Boolean = true,
     val isNeedLoadFirstPage: Boolean = true,
 )
@@ -35,10 +35,6 @@ class MoviesViewModel : ViewModel() {
     private var searchedPage: Int = INITIAL_SEARCHED_PAGE
 
     private val repository = Repository()
-
-    private val _allCountries = MutableStateFlow(emptyList<String>())
-    val allCountries: StateFlow<List<String>>
-        get() = _allCountries.asStateFlow()
 
     var selectedCountries = mutableListOf("")
 
@@ -61,34 +57,15 @@ class MoviesViewModel : ViewModel() {
         }
     }
 
-    fun loadNextSearchedPage(query: String) {
-        viewModelScope.launch {
-            try {
-                val searchedMovies =
-                    repository.getMoviesBySearch(
-                        page = searchedPage,
-                        limit = PAGE_SIZE,
-                        search = query
-                    )
-                _movies.update { state ->
-                    state.copy(
-                        searchedMoviesList = state.searchedMoviesList + searchedMovies,
-                        isLoading = false
-                    )
-                }
-                searchedPage++
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     fun getAllCountries() {
         viewModelScope.launch {
             try {
                 val gettingCountries = repository.getAllCountries()
-                _allCountries.update {
-                    gettingCountries
+                _movies.update {
+                    state ->
+                    state.copy(
+                        countries = gettingCountries
+                    )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -102,13 +79,6 @@ class MoviesViewModel : ViewModel() {
 
     fun addToChosenCountries(country: String) {
         selectedCountries.remove(country)
-    }
-
-    fun clearSearch(){
-        searchedPage = INITIAL_PAGE
-        _movies.update { state ->
-            state.copy(searchedMoviesList = emptyList())
-        }
     }
 
     private companion object {

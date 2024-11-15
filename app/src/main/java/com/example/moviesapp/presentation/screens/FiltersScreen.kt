@@ -15,6 +15,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,9 +45,11 @@ fun FiltersScreen(viewModel: MoviesViewModel, modifier: Modifier, navController:
         mutableStateOf(false)
     }
 
+    val screenState = viewModel.movies.collectAsState()
+
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-         //   viewModel.getAllCountries()
+            viewModel.getAllCountries()
         }
     }
 
@@ -61,13 +64,13 @@ fun FiltersScreen(viewModel: MoviesViewModel, modifier: Modifier, navController:
                 onValueChange = { newStartYear -> startYear = newStartYear })
             OutlinedTextField(
                 value = endYear,
-                onValueChange = { newEndYear -> startYear = newEndYear })
+                onValueChange = { newEndYear -> endYear = newEndYear })
         }
 
         Card(modifier = Modifier.fillMaxWidth()) { Text("По стране") }
 
         LazyColumn {
-            itemsIndexed(viewModel.allCountries.value) { _, country ->
+            itemsIndexed(screenState.value.countries) { _, country ->
                 Text(text = country, modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)

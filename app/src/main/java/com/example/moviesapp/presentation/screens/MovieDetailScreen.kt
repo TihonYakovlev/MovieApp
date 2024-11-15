@@ -6,21 +6,17 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -41,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import com.example.moviesapp.R
-import com.example.moviesapp.data.movie_details.Person
 import com.example.moviesapp.viewmodels.MovieDetailsViewModel
 import com.example.moviesapp.viewmodels.People
 
@@ -59,7 +54,6 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String) {
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .background(Color(0xFFFAFAFA))
-            .padding(16.dp)
     ) {
         SubcomposeAsyncImage(
             modifier = Modifier
@@ -96,49 +90,56 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = details.name,
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = details.alternativeName,
-            style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = details.description,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        Column(
+            modifier = Modifier.padding(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            InfoTag(label = "Год", value = details.year.toString())
-            InfoTag(label = "Рейтинг", value = details.rating.toString())
-            InfoTag(label = "Продолжительность", value = "${details.movieLength} мин")
-            InfoTag(label = "Возраст", value = "${details.ageRating}+")
+            Text(
+                text = details.name,
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Text(
+                text = details.alternativeName,
+                style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = details.description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                InfoTag(label = "Год", value = details.year.toString())
+                InfoTag(label = "Рейтинг", value = details.rating.toString())
+                InfoTag(label = "Продолжительность", value = "${details.movieLength} мин")
+                InfoTag(label = "Возраст", value = "${details.ageRating}+")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            GenreTags(genres = details.genres)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            CountryTags(countries = details.countries)
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        GenreTags(genres = details.genres)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        CountryTags(countries = details.countries)
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = "Люди",
@@ -146,8 +147,11 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String) {
             color = MaterialTheme.colorScheme.onBackground
         )
         LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.Red),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(8.dp)
         ) {
             items(details.persons) { person ->
                 PersonCard(person = person)
@@ -187,7 +191,10 @@ fun GenreTags(genres: List<String>) {
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .padding(8.dp)
-                    .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f), shape = RoundedCornerShape(12.dp))
+                    .background(
+                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
+                        shape = RoundedCornerShape(12.dp)
+                    )
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             )
         }
@@ -207,7 +214,10 @@ fun CountryTags(countries: List<String>) {
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .padding(8.dp)
-                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.1f), shape = RoundedCornerShape(12.dp))
+                    .background(
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(12.dp)
+                    )
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             )
         }
@@ -220,7 +230,6 @@ fun PersonCard(person: People) {
         modifier = Modifier
             .width(160.dp)
             .height(250.dp)
-            .padding(8.dp)
             .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surface)

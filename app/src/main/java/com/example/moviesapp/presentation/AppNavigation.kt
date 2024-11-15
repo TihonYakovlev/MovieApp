@@ -11,6 +11,7 @@ import com.example.moviesapp.presentation.screens.MoviesListScreen
 import com.example.moviesapp.presentation.screens.SearchedMoviesScreen
 import com.example.moviesapp.viewmodels.MovieDetailsViewModel
 import com.example.moviesapp.viewmodels.MoviesViewModel
+import com.example.moviesapp.viewmodels.SearchViewModel
 
 object Routes {
     val MoviesListScreen = "movies_list_screen"
@@ -23,6 +24,7 @@ object Routes {
 fun AppNavigation(
     viewModel: MoviesViewModel,
     detailsViewModel: MovieDetailsViewModel,
+    searchedMoviesViewModel: SearchViewModel,
     navController: NavHostController,
 ) {
 
@@ -41,7 +43,7 @@ fun AppNavigation(
             val query = it.arguments?.getString("query")
 
             SearchedMoviesScreen(
-                viewModel = viewModel,
+                viewModel = searchedMoviesViewModel,
                 navController = navController,
                 query = query ?: ""
             )

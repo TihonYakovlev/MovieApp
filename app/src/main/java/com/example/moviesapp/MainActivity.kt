@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.presentation.AppNavigation
 import com.example.moviesapp.viewmodels.MovieDetailsViewModel
 import com.example.moviesapp.viewmodels.MoviesViewModel
+import com.example.moviesapp.viewmodels.SearchViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,17 +17,28 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: MoviesViewModel by viewModels()
             val detailsViewModel: MovieDetailsViewModel by viewModels()
-            MoviesApp(viewModel = viewModel, detailsViewModel = detailsViewModel)
+            val searchedMoviesViewModel: SearchViewModel by viewModels()
+
+            MoviesApp(
+                viewModel = viewModel,
+                detailsViewModel = detailsViewModel,
+                searchedMoviesViewModel = searchedMoviesViewModel
+            )
         }
     }
 }
 
 @Composable
-fun MoviesApp(viewModel: MoviesViewModel, detailsViewModel: MovieDetailsViewModel) {
+fun MoviesApp(
+    viewModel: MoviesViewModel,
+    detailsViewModel: MovieDetailsViewModel,
+    searchedMoviesViewModel: SearchViewModel
+) {
     val navController = rememberNavController()
     AppNavigation(
         viewModel = viewModel,
         detailsViewModel = detailsViewModel,
+        searchedMoviesViewModel = searchedMoviesViewModel,
         navController = navController
     )
 }

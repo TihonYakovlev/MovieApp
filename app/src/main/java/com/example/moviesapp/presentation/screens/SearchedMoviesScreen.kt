@@ -22,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -34,12 +33,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.moviesapp.ui.theme.MoviesAppTheme
-import com.example.moviesapp.viewmodels.MoviesViewModel
+import com.example.moviesapp.viewmodels.SearchViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchedMoviesScreen(viewModel: MoviesViewModel, navController: NavController, query: String) {
+fun SearchedMoviesScreen(viewModel: SearchViewModel, navController: NavController, query: String) {
     MoviesAppTheme {
         Scaffold(
             topBar = {
@@ -88,35 +87,44 @@ fun SearchedMoviesScreen(viewModel: MoviesViewModel, navController: NavControlle
 
 @Composable
 fun SearchedMoviesListScreenContent(
-    viewModel: MoviesViewModel,
+    viewModel: SearchViewModel,
     modifier: Modifier,
     navController: NavController,
     query: String
 ) {
-    val screenState by viewModel.movies.collectAsStateWithLifecycle()
+    val screenState by viewModel.searchedMovies.collectAsStateWithLifecycle()
     val listState = rememberLazyGridState()
 
     val isScrolledToEnd = remember {
         derivedStateOf {
-            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.let { item ->
-                item.index == listState.layoutInfo.totalItemsCount - 1
-            } ?: true
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == listState.layoutInfo.totalItemsCount - 1
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        println("Вызвался Unit")
+
+        if (screenState.isNeedLoadFirstPage) {
+            viewModel.loadNextSearchedPage(query)
         }
     }
 
     LaunchedEffect(isScrolledToEnd.value) {
+        println("Вызвался isScrolledToEnd.value со значением ${isScrolledToEnd.value}")
         if (isScrolledToEnd.value) {
             viewModel.loadNextSearchedPage(query)
         }
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            viewModel.clearSearch()
+    if (screenState.isLoading) {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
         }
-    }
 
-
+    } else {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(300.dp),
             contentPadding = PaddingValues(4.dp),
@@ -124,23 +132,13 @@ fun SearchedMoviesListScreenContent(
             state = listState
         ) {
 
-            if (screenState.isLoading) {
-                item {
-                    Box(
-                        modifier = modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-            } else {
-                itemsIndexed(screenState.searchedMoviesList) { _, movie ->
-                    MovieCard(movie, navController)
-                }
+            itemsIndexed(screenState.searchedMovies) { _, movie ->
+                MovieCard(movie, navController)
             }
 
-            if (isScrolledToEnd.value && screenState.isLoading) {
-                item {
+
+            item {
+                if (isScrolledToEnd.value) {
                     Box(
                         modifier = modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center
@@ -150,4 +148,7 @@ fun SearchedMoviesListScreenContent(
                 }
             }
         }
+    }
+
+
 }

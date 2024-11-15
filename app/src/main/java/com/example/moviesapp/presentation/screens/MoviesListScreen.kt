@@ -64,10 +64,6 @@ fun MoviesListScreen(viewModel: MoviesViewModel, navController: NavController) {
         mutableStateOf("")
     }
 
-    var isSearchClicked by remember {
-        mutableStateOf(false)
-    }
-
     MoviesAppTheme {
         Scaffold(
             topBar = {
