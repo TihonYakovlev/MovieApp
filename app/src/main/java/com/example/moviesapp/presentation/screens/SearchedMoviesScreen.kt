@@ -110,7 +110,6 @@ fun SearchedMoviesListScreenContent(
     }
 
     LaunchedEffect(isScrolledToEnd.value) {
-        println("Вызвался isScrolledToEnd.value со значением ${isScrolledToEnd.value}")
         if (isScrolledToEnd.value) {
             viewModel.loadNextSearchedPage(query)
         }
@@ -136,7 +135,6 @@ fun SearchedMoviesListScreenContent(
                 MovieCard(movie, navController)
             }
 
-
             item {
                 if (isScrolledToEnd.value) {
                     Box(
@@ -147,6 +145,7 @@ fun SearchedMoviesListScreenContent(
                     }
                 }
             }
+
         }
     }
 

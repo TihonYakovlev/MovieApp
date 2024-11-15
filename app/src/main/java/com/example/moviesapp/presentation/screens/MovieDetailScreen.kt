@@ -99,13 +99,13 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String) {
                 text = details.name,
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
             )
             Text(
                 text = details.alternativeName,
                 style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -114,14 +114,14 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String) {
                 text = details.description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(10.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 InfoTag(label = "Год", value = details.year.toString())
                 InfoTag(label = "Рейтинг", value = details.rating.toString())
@@ -144,12 +144,12 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String) {
         Text(
             text = "Люди",
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(10.dp)
         )
         LazyRow(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.Red),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(8.dp)
         ) {
