@@ -21,7 +21,6 @@ data class MovieInfo(
 
 data class MoviesScreenState(
     val moviesList: List<MovieInfo> = emptyList(),
-    val countries: List<String> = emptyList(),
     val isLoading: Boolean = true,
     val isNeedLoadFirstPage: Boolean = true,
 )
@@ -32,11 +31,8 @@ class MoviesViewModel : ViewModel() {
         get() = _movies.asStateFlow()
 
     private var page: Int = INITIAL_PAGE
-    private var searchedPage: Int = INITIAL_SEARCHED_PAGE
 
     private val repository = Repository()
-
-    var selectedCountries = mutableListOf("")
 
     fun loadNextPage() {
         viewModelScope.launch {
@@ -57,33 +53,10 @@ class MoviesViewModel : ViewModel() {
         }
     }
 
-    fun getAllCountries() {
-        viewModelScope.launch {
-            try {
-                val gettingCountries = repository.getAllCountries()
-                _movies.update {
-                    state ->
-                    state.copy(
-                        countries = gettingCountries
-                    )
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
 
-    fun removeFromChosenCountries(country: String) {
-        selectedCountries.add(country)
-    }
-
-    fun addToChosenCountries(country: String) {
-        selectedCountries.remove(country)
-    }
 
     private companion object {
         const val PAGE_SIZE = 10
         const val INITIAL_PAGE = 1
-        const val INITIAL_SEARCHED_PAGE = 1
     }
 }

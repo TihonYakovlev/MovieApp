@@ -9,6 +9,7 @@ import com.example.moviesapp.presentation.screens.FiltersScreen
 import com.example.moviesapp.presentation.screens.MovieDetailScreen
 import com.example.moviesapp.presentation.screens.MoviesListScreen
 import com.example.moviesapp.presentation.screens.SearchedMoviesScreen
+import com.example.moviesapp.viewmodels.FiltersViewModel
 import com.example.moviesapp.viewmodels.MovieDetailsViewModel
 import com.example.moviesapp.viewmodels.MoviesViewModel
 import com.example.moviesapp.viewmodels.SearchViewModel
@@ -25,6 +26,7 @@ fun AppNavigation(
     viewModel: MoviesViewModel,
     detailsViewModel: MovieDetailsViewModel,
     searchedMoviesViewModel: SearchViewModel,
+    filtersViewModel: FiltersViewModel,
     navController: NavHostController,
 ) {
 
@@ -53,12 +55,13 @@ fun AppNavigation(
             val id = it.arguments?.getString("id")
             MovieDetailScreen(
                 viewModel = detailsViewModel,
-                id = id ?: "id not found"
+                id = id ?: "id not found",
+                navController = navController
             )
         }
 
         composable(Routes.FiltersScreen) {
-            FiltersScreen(viewModel,modifier, navController)
+            FiltersScreen(filtersViewModel,modifier, navController)
         }
 
     })

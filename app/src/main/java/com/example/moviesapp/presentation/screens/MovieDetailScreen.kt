@@ -1,5 +1,6 @@
 package com.example.moviesapp.presentation.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,9 +20,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,24 +42,80 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.example.moviesapp.R
+import com.example.moviesapp.ui.theme.MoviesAppTheme
+import com.example.moviesapp.viewmodels.MovieDetails
 import com.example.moviesapp.viewmodels.MovieDetailsViewModel
 import com.example.moviesapp.viewmodels.People
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String) {
+fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String, navController: NavController) {
     val screenState by viewModel.details.collectAsStateWithLifecycle()
     val details = screenState.movieDetails
+    MoviesAppTheme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = details.name, maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.navigateUp() }) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Вернуться назад"
+                            )
+                        }
+                    },
+
+                )
+            },
+            bottomBar = {
+                BottomAppBar(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = "Bottom app bar",
+                    )
+                }
+            },
+            content = { innerPadding ->
+                DetailsContent(
+                    viewModel = viewModel,
+                    id = id,
+                    modifier = Modifier.padding(innerPadding),
+                    details = details
+                )
+            }
+        )
+    }
+}
+
+@Composable
+fun DetailsContent(
+    viewModel: MovieDetailsViewModel, id: String, modifier: Modifier, details: MovieDetails
+) {
 
     LaunchedEffect(Unit) {
         viewModel.getDetails(id = id.toInt())
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .background(Color(0xFFFAFAFA))
@@ -99,13 +164,17 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String) {
                 text = details.name,
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
             )
             Text(
                 text = details.alternativeName,
                 style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -114,7 +183,9 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String) {
                 text = details.description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.fillMaxWidth().padding(10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -159,6 +230,7 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String) {
         }
     }
 }
+
 
 @Composable
 fun InfoTag(label: String, value: String) {

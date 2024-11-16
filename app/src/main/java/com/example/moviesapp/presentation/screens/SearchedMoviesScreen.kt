@@ -102,7 +102,6 @@ fun SearchedMoviesListScreenContent(
     }
 
     LaunchedEffect(Unit) {
-        println("Вызвался Unit")
 
         if (screenState.isNeedLoadFirstPage) {
             viewModel.loadNextSearchedPage(query)
