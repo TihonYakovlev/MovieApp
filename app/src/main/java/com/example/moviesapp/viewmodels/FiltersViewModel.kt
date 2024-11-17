@@ -10,31 +10,84 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 data class FiltersScreenState(
-    val allCountries: List<String> = emptyList(),
-    val selectedAge: String = "",
+    val selectedAge: Set<Int> = setOf(0, 18),
     val selectedCountries: Set<String> = emptySet(),
-    val selectedStartYear: Int = 1868,
-    val selectedEndYear: Int = Calendar.getInstance().get(Calendar.YEAR),
+    val selectedStartYear: String = "1874",
+    val selectedEndYear: String = Calendar.getInstance().get(Calendar.YEAR).toString(),
 )
 
 class FiltersViewModel : ViewModel() {
-    val _filters = MutableStateFlow(FiltersScreenState())
+    private val _filters = MutableStateFlow(FiltersScreenState())
     val filters = _filters.asStateFlow()
 
-    val repository = Repository()
+    private val _allCountries = MutableStateFlow<List<String>>(emptyList())
+    val allCountries = _allCountries.asStateFlow()
 
+    private val repository = Repository()
 
-    
+    fun updateSelectedAge(newValue: Int) {
+
+        _filters.update { state ->
+            val updatedAge = if (state.selectedAge.contains(newValue)) {
+                state.selectedAge - newValue
+            } else {
+                state.selectedAge + newValue
+            }
+            state.copy(
+                selectedAge = updatedAge
+            )
+        }
+    }
+
+    fun updateSelectedStartYear(newValue: String) {
+        _filters.update { state ->
+            state.copy(
+                selectedStartYear = newValue
+            )
+        }
+    }
+
+    fun updateSelectedEndYear(newValue: String) {
+        _filters.update { state ->
+            state.copy(
+                selectedEndYear = newValue
+            )
+        }
+    }
+
+    fun updateSelectedCountries(newCountry: String) {
+        _filters.update { state ->
+            val updatedCountries = if (state.selectedCountries.contains(newCountry)) {
+                state.selectedCountries - newCountry
+            } else {
+                state.selectedCountries + newCountry
+            }
+            state.copy(selectedCountries = updatedCountries)
+        }
+    }
+
+    fun updateFilters(
+        selectedAge: Set<Int>,
+        selectedCountries: Set<String>,
+        selectedStartYear: String,
+        selectedEndYear: String
+    ) {
+        _filters.update { state ->
+            state.copy(
+                selectedAge = selectedAge,
+                selectedCountries = selectedCountries,
+                selectedStartYear = selectedStartYear,
+                selectedEndYear = selectedEndYear,
+            )
+        }
+    }
 
     fun getAllCountries() {
         viewModelScope.launch {
             try {
                 val gettingCountries = repository.getAllCountries()
-                _filters.update {
-                        state ->
-                    state.copy(
-                        allCountries = gettingCountries
-                    )
+                _allCountries.update {
+                    gettingCountries
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

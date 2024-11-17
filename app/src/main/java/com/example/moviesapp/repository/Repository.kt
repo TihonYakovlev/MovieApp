@@ -73,5 +73,41 @@ class Repository {
         countries.map { it.name }
     }
 
+    suspend fun getMoviesWithFilters(
+        page: Int,
+        limit: Int,
+        countries: List<String>,
+        startYear: String,
+        endYear: String,
+        age: Set<Int>
+    ): List<MovieInfo> = withContext(Dispatchers.IO){
+
+        val yearsString = "$startYear-$endYear"
+        val ageDiapason = if (age.isNotEmpty()) "${age.min()}-${age.max()}" else "0-18"
+
+        val movies =
+            RetrofitInstance.api.getFilteredMoviesList(
+                page = page.toString(),
+                limit = limit.toString(),
+                ageRating = ageDiapason,
+                year = yearsString,
+                countries = countries
+            )
+
+        movies.docs.map {
+            MovieInfo(
+                id = it.id,
+                alternativeName = it.alternativeName ?: "",
+                name = it.name ?: (it.alternativeName ?: ""),
+                genre = it.genres?.first()?.name ?: "-",
+                rating = if (it.rating?.imdb.toString() == "0.0") "-" else it.rating?.imdb.toString(),
+                year = if (it.year.toString() == "null") "-" else it.year.toString(),
+                poster = it.poster?.url ?: ""
+            )
+        }
+
+    }
 }
+
+
 

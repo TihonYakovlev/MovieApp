@@ -36,8 +36,19 @@ interface MoviesApi {
         @Query("field") field: String,
     ): Countries
 
+
+    @Headers("X-API-KEY: $API_KEY", "accept: application/json")
+    @GET("v1.4/movie")
+    suspend fun getFilteredMoviesList(
+        @Query("page") page: String,
+        @Query("limit") limit: String,
+        @Query("ageRating") ageRating: String,
+        @Query("year") year: String,
+        @Query("countries.name") countries: List<String>
+    ): Movies
+
     private companion object {
-        private const val API_KEY = "9W9BCXY-9VV4P47-H64HH8Y-VC3M4H4"
+        private const val API_KEY = "HGDBFW5-MN44TNG-QEMC24G-SQWD7D7"
         //9W9BCXY-9VV4P47-H64HH8Y-VC3M4H4
         //HGDBFW5-MN44TNG-QEMC24G-SQWD7D7
         //KA5C65N-22G4S79-JHDD0QM-T65RJ4A

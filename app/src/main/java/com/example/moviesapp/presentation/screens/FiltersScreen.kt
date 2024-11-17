@@ -38,14 +38,21 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
 
     val coroutineScope = rememberCoroutineScope()
 
-    var startYear by remember { mutableStateOf("") }
-    var endYear by remember { mutableStateOf("") }
-    var selectedAge by remember { mutableStateOf<String?>(null) }
-    var selectedCountries by remember { mutableStateOf(mutableSetOf<String>()) }
+
     var isCountriesExpanded by remember { mutableStateOf(false) }
 
     val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
     val screenState = viewModel.filters.collectAsState()
+    val allCountries = viewModel.allCountries.collectAsState()
+
+
+    val selectedAge = screenState.value.selectedAge
+
+    var startYear = screenState.value.selectedStartYear
+    var endYear = screenState.value.selectedEndYear
+    var selectedCountries = screenState.value.selectedCountries
+
+
     val countriesListState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
@@ -60,30 +67,28 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
 
         Text("По возрастному ограничению")
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            listOf("0+", "6+", "12+", "18+").forEach { age ->
+            listOf(0, 6, 12, 18).forEach { age ->
                 Card(
                     modifier = Modifier
                         .clickable {
-                            selectedAge = if (selectedAge == age) null else age
+                            viewModel.updateSelectedAge(age)
                         },
                     colors = CardDefaults.cardColors(
-                        containerColor = if (selectedAge == age) androidx.compose.ui.graphics.Color.Cyan else androidx.compose.ui.graphics.Color.LightGray
+                        containerColor = if (selectedAge.contains(age)) androidx.compose.ui.graphics.Color.Cyan else androidx.compose.ui.graphics.Color.LightGray
                     )
                 ) {
-                    Text(age, modifier = Modifier.padding(8.dp))
+                    Text("$age+", modifier = Modifier.padding(8.dp))
                 }
             }
         }
+
 
         Text("По году", modifier = Modifier.padding(top = 16.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
                 value = startYear,
-                onValueChange = { newValue ->
-                    if (newValue.all { it.isDigit() } && newValue.toIntOrNull()
-                            ?.let { it in 1868..currentYear } == true) {
-                        startYear = newValue
-                    }
+                onValueChange = {
+                    viewModel.updateSelectedStartYear(it)
                 },
                 label = { Text("От") },
                 modifier = Modifier
@@ -92,8 +97,8 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
             )
             OutlinedTextField(
                 value = endYear,
-                onValueChange = { newValue ->
-
+                onValueChange = {
+                    viewModel.updateSelectedEndYear(it)
                 },
                 label = { Text("До") },
                 modifier = Modifier.weight(1f)
@@ -119,17 +124,13 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
                     .height(200.dp),
                 state = countriesListState
             ) {
-                itemsIndexed(screenState.value.allCountries) { _, country ->
+                itemsIndexed(allCountries.value) { _, country ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp, horizontal = 8.dp)
                             .clickable {
-                                if (selectedCountries.contains(country)) {
-                                    selectedCountries.remove(country)
-                                } else {
-                                    selectedCountries.add(country)
-                                }
+                                viewModel.updateSelectedCountries(country)
                             },
                         colors = CardDefaults.cardColors(
                             containerColor = if (selectedCountries.contains(country)) androidx.compose.ui.graphics.Color.Cyan else androidx.compose.ui.graphics.Color.White
@@ -152,10 +153,10 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(onClick = {
-                selectedAge = null
-                startYear = ""
-                endYear = ""
-                selectedCountries.clear()
+//                selectedAge = null
+//                startYear = ""
+//                endYear = ""
+//                selectedCountries.clear()
             }) { Text("Сбросить") }
             Button(onClick = { navController.navigate(Routes.MoviesListScreen) }) { Text("Применить") }
         }

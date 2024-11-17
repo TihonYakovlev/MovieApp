@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -53,12 +54,17 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.moviesapp.R
 import com.example.moviesapp.presentation.Routes
 import com.example.moviesapp.ui.theme.MoviesAppTheme
+import com.example.moviesapp.viewmodels.FiltersViewModel
 import com.example.moviesapp.viewmodels.MovieInfo
 import com.example.moviesapp.viewmodels.MoviesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoviesListScreen(viewModel: MoviesViewModel, navController: NavController) {
+fun MoviesListScreen(
+    viewModel: MoviesViewModel,
+    filtersViewModel: FiltersViewModel,
+    navController: NavController
+) {
 
     var searchValue by remember {
         mutableStateOf("")
@@ -111,6 +117,7 @@ fun MoviesListScreen(viewModel: MoviesViewModel, navController: NavController) {
             content = { innerPadding ->
                 MoviesListScreenContent(
                     viewModel = viewModel,
+                    filtersViewModel = filtersViewModel,
                     modifier = Modifier
                         .padding(innerPadding)
                         .systemBarsPadding(),
@@ -124,11 +131,13 @@ fun MoviesListScreen(viewModel: MoviesViewModel, navController: NavController) {
 @Composable
 fun MoviesListScreenContent(
     viewModel: MoviesViewModel,
+    filtersViewModel: FiltersViewModel,
     modifier: Modifier,
     navController: NavController
 ) {
     val screenState by viewModel.movies.collectAsStateWithLifecycle()
     val listState = rememberLazyGridState()
+    val filtersState = filtersViewModel.filters.collectAsStateWithLifecycle()
 
     val isScrolledToEnd = remember {
         derivedStateOf {
@@ -136,15 +145,22 @@ fun MoviesListScreenContent(
         }
     }
 
+    DisposableEffect(Unit) {
+        onDispose {
+           viewModel.saveScreenState(listState.firstVisibleItemIndex)
+        }
+    }
+
     LaunchedEffect(Unit) {
+        println("JJJJJJJJJJJJJJ ${screenState.isNeedLoadFirstPage}")
         if (screenState.isNeedLoadFirstPage) {
-            viewModel.loadNextPage()
+            viewModel.loadNextPageWithFilters()
         }
     }
 
     LaunchedEffect(isScrolledToEnd.value) {
         if (isScrolledToEnd.value) {
-            viewModel.loadNextPage()
+            viewModel.loadNextPageWithFilters()
         }
     }
 
@@ -165,8 +181,10 @@ fun MoviesListScreenContent(
             itemsIndexed(screenState.moviesList) { _, movie ->
                 MovieCard(movie, navController)
             }
+
+            if (isScrolledToEnd.value) {
             item {
-                if (isScrolledToEnd.value) {
+
                     Box(
                         modifier = modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center
