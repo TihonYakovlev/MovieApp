@@ -10,12 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class Repository {
-    suspend fun getMovies(page: Int, limit: Int): List<MovieInfo> = withContext(Dispatchers.IO) {
-        val movies =
-            RetrofitInstance.api.getMoviesList(page.toString(), limit.toString())
-        MoviesToListMapper().map(movies)
-    }
-
     suspend fun getMoviesBySearch(page: Int, limit: Int, search: String): List<MovieInfo> =
         withContext(Dispatchers.IO) {
             val movies =

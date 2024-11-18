@@ -10,13 +10,6 @@ import retrofit2.http.Query
 
 interface MoviesApi {
     @Headers("X-API-KEY: $API_KEY", "accept: application/json")
-    @GET("v1.4/movie")
-    suspend fun getMoviesList(
-        @Query("page") page: String,
-        @Query("limit") limit: String,
-    ): Movies
-
-    @Headers("X-API-KEY: $API_KEY", "accept: application/json")
     @GET("v1.4/movie/search")
     suspend fun getMoviesBySearch(
         @Query("page") page: String,
@@ -35,7 +28,6 @@ interface MoviesApi {
     suspend fun getPossibleCountries(
         @Query("field") field: String,
     ): Countries
-
 
     @Headers("X-API-KEY: $API_KEY", "accept: application/json")
     @GET("v1.4/movie")

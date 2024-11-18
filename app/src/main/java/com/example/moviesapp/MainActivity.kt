@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             val detailsViewModel: MovieDetailsViewModel by viewModels()
             val searchedMoviesViewModel: SearchViewModel by viewModels()
             val filtersViewModel: FiltersViewModel by viewModels()
-            val viewModel: MoviesViewModel by viewModels() {
+            val viewModel: MoviesViewModel by viewModels {
                 viewModelFactory {
                     initializer {
                         MoviesViewModel(filtersViewModel.filters)

@@ -1,9 +1,7 @@
 package com.example.moviesapp.presentation.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
@@ -55,7 +54,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.moviesapp.R
 import com.example.moviesapp.presentation.Routes
 import com.example.moviesapp.ui.theme.MoviesAppTheme
-import com.example.moviesapp.viewmodels.FiltersViewModel
 import com.example.moviesapp.viewmodels.MovieInfo
 import com.example.moviesapp.viewmodels.MoviesViewModel
 
@@ -63,7 +61,6 @@ import com.example.moviesapp.viewmodels.MoviesViewModel
 @Composable
 fun MoviesListScreen(
     viewModel: MoviesViewModel,
-    filtersViewModel: FiltersViewModel,
     navController: NavController
 ) {
 
@@ -118,7 +115,6 @@ fun MoviesListScreen(
             content = { innerPadding ->
                 MoviesListScreenContent(
                     viewModel = viewModel,
-                    filtersViewModel = filtersViewModel,
                     modifier = Modifier
                         .padding(innerPadding)
                         .systemBarsPadding(),
@@ -132,13 +128,11 @@ fun MoviesListScreen(
 @Composable
 fun MoviesListScreenContent(
     viewModel: MoviesViewModel,
-    filtersViewModel: FiltersViewModel,
     modifier: Modifier,
     navController: NavController
 ) {
     val screenState by viewModel.movies.collectAsStateWithLifecycle()
     val listState = rememberLazyGridState()
-    val filtersState = filtersViewModel.filters.collectAsStateWithLifecycle()
 
     val isScrolledToEnd = remember {
         derivedStateOf {
@@ -153,7 +147,6 @@ fun MoviesListScreenContent(
     }
 
     LaunchedEffect(Unit) {
-        println("JJJJJJJJJJJJJJ ${screenState.isNeedLoadFirstPage}")
         if (screenState.isNeedLoadFirstPage) {
             viewModel.loadNextPageWithFilters()
         }
@@ -185,7 +178,6 @@ fun MoviesListScreenContent(
 
             if (isScrolledToEnd.value) {
             item {
-
                     Box(
                         modifier = modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center
@@ -222,11 +214,10 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
             disabledContentColor = Color.Black,
             containerColor = Color.White,
             disabledContainerColor = Color.Red
-        ), elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
-
         Row {
-
             Image(
                 painter = moviePoster,
                 contentDescription = "Poster",
@@ -235,10 +226,8 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
 
             Column(
                 modifier = Modifier
-                    .background(color = Color.Green)
                     .padding(10.dp)
                     .fillMaxWidth(0.8f)
-                    //.weight(4f, fill = false)
             ) {
                 Text(
                     text = movie.name,
@@ -255,12 +244,10 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
-                  //  .weight(1f)
-                    .background(color = Color.Red),
+                    .padding(10.dp),
                 contentAlignment = Alignment.CenterEnd
             ){
-                Text(text = movie.rating, )
+                Text(text = movie.rating, fontWeight = FontWeight.Bold)
             }
 
         }

@@ -41,16 +41,15 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
 
     var isCountriesExpanded by remember { mutableStateOf(false) }
 
-    val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
     val screenState = viewModel.filters.collectAsState()
     val allCountries = viewModel.allCountries.collectAsState()
 
 
     val selectedAge = screenState.value.selectedAge
 
-    var startYear = screenState.value.selectedStartYear
-    var endYear = screenState.value.selectedEndYear
-    var selectedCountries = screenState.value.selectedCountries
+    val startYear = screenState.value.selectedStartYear
+    val endYear = screenState.value.selectedEndYear
+    val selectedCountries = screenState.value.selectedCountries
 
 
     val countriesListState = rememberLazyListState()

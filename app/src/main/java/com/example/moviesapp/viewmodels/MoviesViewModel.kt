@@ -52,21 +52,17 @@ class MoviesViewModel(private val filtersState: StateFlow<FiltersScreenState>) :
         }
     }
 
-    fun resetMovies() {
-        println("ВЫЗВАЛСЯ РЕСЕТ")
+    private fun resetMovies() {
         _movies.update { state ->
             state.copy(
                 moviesList = emptyList(),
                 isNeedLoadFirstPage = true,
-                // isLoading = true
             )
         }
         page = INITIAL_PAGE
     }
 
     fun loadNextPageWithFilters() {
-        println("ВЫЗВАЛСЯ loadNextPageWithFilters")
-
         viewModelScope.launch {
             try {
                 val movies = repository.getMoviesWithFilters(

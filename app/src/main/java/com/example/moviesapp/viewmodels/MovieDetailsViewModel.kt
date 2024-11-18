@@ -2,7 +2,6 @@ package com.example.moviesapp.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moviesapp.data.movie_details.Person
 import com.example.moviesapp.repository.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
