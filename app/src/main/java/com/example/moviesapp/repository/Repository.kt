@@ -1,5 +1,7 @@
 package com.example.moviesapp.repository
 
+import com.example.moviesapp.data.movie_details.MovieDetailsApi
+import com.example.moviesapp.data.movies_list.Movies
 import com.example.moviesapp.retrofit.RetrofitInstance
 import com.example.moviesapp.viewmodels.MovieDetails
 import com.example.moviesapp.viewmodels.MovieInfo
@@ -11,39 +13,71 @@ class Repository {
     suspend fun getMovies(page: Int, limit: Int): List<MovieInfo> = withContext(Dispatchers.IO) {
         val movies =
             RetrofitInstance.api.getMoviesList(page.toString(), limit.toString())
-        movies.docs.map {
-            MovieInfo(
-                id = it.id,
-                alternativeName = it.alternativeName ?: "",
-                name = it.name ?: (it.alternativeName ?: ""),
-                genre = it.genres?.first()?.name ?: "-",
-                rating = if (it.rating?.imdb.toString() == "0.0") "No rating" else it.rating?.imdb.toString(),
-                year = if (it.year.toString() == "null") "-" else it.year.toString(),
-                poster = it.poster?.url ?: ""
-            )
-        }
+        MoviesToListMapper().map(movies)
     }
 
     suspend fun getMoviesBySearch(page: Int, limit: Int, search: String): List<MovieInfo> =
         withContext(Dispatchers.IO) {
             val movies =
                 RetrofitInstance.api.getMoviesBySearch(page.toString(), limit.toString(), search)
-            movies.docs.map {
-                MovieInfo(
-                    id = it.id,
-                    alternativeName = it.alternativeName ?: "-",
-                    name = it.name ?: (it.alternativeName ?: "-"),
-                    genre = it.genres?.first()?.name ?: "-",
-                    rating = if (it.rating?.imdb.toString() == "0.0") "-" else it.rating?.imdb.toString(),
-                    year = if (it.year.toString() == "null") "-" else it.year.toString(),
-                    poster = it.poster?.url ?: ""
-                )
-            }
+            MoviesToListMapper().map(movies)
         }
 
     suspend fun getMovieById(id: Int): MovieDetails = withContext(Dispatchers.IO) {
         val details = RetrofitInstance.api.getMovieById(id)
-        MovieDetails(
+        MovieDetailsApiToMovieDetails().map(details)
+    }
+
+    suspend fun getAllCountries(): List<String> = withContext(Dispatchers.IO) {
+        val countries = RetrofitInstance.api.getPossibleCountries(field = "countries.name")
+        countries.map { it.name }
+    }
+
+    suspend fun getMoviesWithFilters(
+        page: Int,
+        limit: Int,
+        countries: List<String>,
+        startYear: String,
+        endYear: String,
+        age: Set<Int>
+    ): List<MovieInfo> = withContext(Dispatchers.IO) {
+
+        val yearsString = "$startYear-$endYear"
+        val ageDiapason = if (age.isNotEmpty()) "${age.min()}-${age.max()}" else "0-18"
+
+        val movies =
+            RetrofitInstance.api.getFilteredMoviesList(
+                page = page.toString(),
+                limit = limit.toString(),
+                ageRating = ageDiapason,
+                year = yearsString,
+                countries = countries
+            )
+
+        MoviesToListMapper().map(movies)
+
+    }
+}
+
+class MoviesToListMapper {
+    fun map(model: Movies): List<MovieInfo> {
+        return model.docs.map {
+            MovieInfo(
+                id = it.id,
+                alternativeName = it.alternativeName ?: "",
+                name = it.name ?: it.alternativeName ?: "",
+                genre = it.genres?.first()?.name ?: "-",
+                rating = if (it.rating?.imdb.toString() == "0.0") "" else it.rating?.imdb.toString(),
+                year = if (it.year.toString() == "null") "-" else it.year.toString(),
+                poster = it.poster?.url ?: ""
+            )
+        }
+    }
+}
+
+class MovieDetailsApiToMovieDetails{
+    fun map(details: MovieDetailsApi) : MovieDetails{
+        return MovieDetails(
             id = details.id ?: -1,
             name = details.name ?: "-",
             alternativeName = details.alternativeName ?: "-",
@@ -67,47 +101,6 @@ class Repository {
             year = details.year ?: -1
         )
     }
-
-    suspend fun getAllCountries(): List<String> = withContext(Dispatchers.IO) {
-        val countries = RetrofitInstance.api.getPossibleCountries(field = "countries.name")
-        countries.map { it.name }
-    }
-
-    suspend fun getMoviesWithFilters(
-        page: Int,
-        limit: Int,
-        countries: List<String>,
-        startYear: String,
-        endYear: String,
-        age: Set<Int>
-    ): List<MovieInfo> = withContext(Dispatchers.IO){
-
-        val yearsString = "$startYear-$endYear"
-        val ageDiapason = if (age.isNotEmpty()) "${age.min()}-${age.max()}" else "0-18"
-
-        val movies =
-            RetrofitInstance.api.getFilteredMoviesList(
-                page = page.toString(),
-                limit = limit.toString(),
-                ageRating = ageDiapason,
-                year = yearsString,
-                countries = countries
-            )
-
-        movies.docs.map {
-            MovieInfo(
-                id = it.id,
-                alternativeName = it.alternativeName ?: "",
-                name = it.name ?: (it.alternativeName ?: ""),
-                genre = it.genres?.first()?.name ?: "-",
-                rating = if (it.rating?.imdb.toString() == "0.0") "No rating" else it.rating?.imdb.toString(),
-                year = if (it.year.toString() == "null") "-" else it.year.toString(),
-                poster = it.poster?.url ?: ""
-            )
-        }
-
-    }
 }
-
 
 

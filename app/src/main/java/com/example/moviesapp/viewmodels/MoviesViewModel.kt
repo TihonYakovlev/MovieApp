@@ -43,25 +43,6 @@ class MoviesViewModel(private val filtersState: StateFlow<FiltersScreenState>) :
 
     private val repository = Repository()
 
-    fun loadNextPage() {
-        viewModelScope.launch {
-            try {
-                val movies = repository.getMovies(
-                    page = page, limit = PAGE_SIZE
-                )
-                _movies.update { state ->
-                    state.copy(
-                        moviesList = state.moviesList + movies, isLoading = false,
-                        isNeedLoadFirstPage = false
-                    )
-                }
-                page++
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     fun saveScreenState(newIndex: Int){
         _movies.update {
             state ->
