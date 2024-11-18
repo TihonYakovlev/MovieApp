@@ -37,7 +37,6 @@ fun AppNavigation(
         composable(Routes.MoviesListScreen) {
             MoviesListScreen(
                 viewModel = viewModel,
-                filtersViewModel = filtersViewModel,
                 navController = navController
             )
         }
