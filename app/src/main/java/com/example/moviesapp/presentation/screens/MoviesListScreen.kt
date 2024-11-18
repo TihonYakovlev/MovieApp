@@ -1,7 +1,7 @@
 package com.example.moviesapp.presentation.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,122 +10,224 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.List
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import com.example.moviesapp.R
+import com.example.moviesapp.presentation.Routes
+import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.example.moviesapp.viewmodels.MovieInfo
 import com.example.moviesapp.viewmodels.MoviesViewModel
-import kotlinx.coroutines.launch
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoviesListScreen(
+    viewModel: MoviesViewModel,
+    navController: NavController
+) {
+
+    var searchValue by remember {
+        mutableStateOf("")
+    }
+
+    MoviesAppTheme {
+        Scaffold(
+            topBar = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    SearchBar(
+                        query = searchValue,
+                        onQueryChange = { newQuery ->
+                            searchValue = newQuery
+                        },
+                        onSearch = {
+                            if (searchValue.isNotEmpty()) {
+                                navController.navigate(route = Routes.SearchedMoviesScreen + "/${searchValue}")
+                            }
+                        },
+                        active = false,
+                        onActiveChange = {},
+                        placeholder = { Text(text = "Поиск...") },
+                        content = {}
+                    )
+                    IconButton(
+                        onClick = {
+                            navController.navigate(Routes.FiltersScreen)
+                        }
+                    ) {
+                        Icon(Icons.AutoMirrored.TwoTone.List, contentDescription = "Фильтры")
+                    }
+                }
+            },
+            bottomBar = {
+                BottomAppBar(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = "Bottom app bar",
+                    )
+                }
+            },
+            content = { innerPadding ->
+                MoviesListScreenContent(
+                    viewModel = viewModel,
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .systemBarsPadding(),
+                    navController = navController
+                )
+            }
+        )
+    }
+}
 
 @Composable
-fun MoviesListScreen(modifier: Modifier, viewModel: MoviesViewModel) {
-    val coroutineScope = rememberCoroutineScope()
-    val screenState = viewModel.movies.collectAsState()
-    val page = remember { mutableStateOf(1) }
-    val loading = remember { mutableStateOf(false) }
-    val itemList = remember { mutableStateListOf<MovieInfo>() }
+fun MoviesListScreenContent(
+    viewModel: MoviesViewModel,
+    modifier: Modifier,
+    navController: NavController
+) {
+    val screenState by viewModel.movies.collectAsStateWithLifecycle()
     val listState = rememberLazyGridState()
-    val isScrollToEnd by remember {
+
+    val isScrolledToEnd = remember {
         derivedStateOf {
             listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == listState.layoutInfo.totalItemsCount - 1
         }
     }
 
-    LaunchedEffect(key1 = page.value) {
-        loading.value = true
-        coroutineScope.launch {
-            viewModel.fetchMoviesList(
-                pageNumber = page.value, limitOfMoviesOnPage = 10
-            )
+    DisposableEffect(Unit) {
+        onDispose {
+           viewModel.saveScreenState(listState.firstVisibleItemIndex)
         }
-        loading.value = false
     }
 
-    LazyVerticalGrid(
-        GridCells.Adaptive(300.dp),
-        contentPadding = PaddingValues(4.dp),
-        modifier = modifier,
-        state = listState,
-    ) {
-        itemList.addAll(screenState.value.moviesList)
-
-        itemsIndexed(itemList) { _, movie ->
-            MovieCard(movie)
+    LaunchedEffect(Unit) {
+        if (screenState.isNeedLoadFirstPage) {
+            viewModel.loadNextPageWithFilters()
         }
+    }
 
-        item {
-            if (loading.value) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(modifier = Modifier.then(Modifier.size(32.dp)))
+    LaunchedEffect(isScrolledToEnd.value) {
+        if (isScrolledToEnd.value) {
+            viewModel.loadNextPageWithFilters()
+        }
+    }
+
+    if (screenState.isLoading) {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(300.dp),
+            contentPadding = PaddingValues(4.dp),
+            modifier = modifier,
+            state = listState
+        ) {
+            itemsIndexed(screenState.moviesList) { _, movie ->
+                MovieCard(movie, navController)
+            }
+
+            if (isScrolledToEnd.value) {
+            item {
+                    Box(
+                        modifier = modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
     }
-
-    LaunchedEffect(isScrollToEnd) {
-        println("$isScrollToEnd")
-        if (isScrollToEnd) {
-            page.value++
-        }
-    }
 }
 
+
 @Composable
-fun MovieCard(movie: MovieInfo) {
-    val moviePoster = rememberImagePainter(data = movie.poster)
+fun MovieCard(movie: MovieInfo, navController: NavController) {
+    val moviePoster = rememberAsyncImagePainter(
+        if (movie.poster != "") {
+            movie.poster
+        } else {
+            R.drawable.no_foto
+        }
+    )
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .requiredHeight(150.dp)
-            .padding(4.dp),
-        // .background(color = Color.White),
+            .padding(4.dp)
+            .clickable {
+                navController.navigate(route = Routes.MovieDetailsScreen + "/${movie.id}")
+            },
         colors = CardColors(
             contentColor = Color.Black,
             disabledContentColor = Color.Black,
             containerColor = Color.White,
             disabledContainerColor = Color.Red
-        ), elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
-
         Row {
-
             Image(
                 painter = moviePoster,
                 contentDescription = "Poster",
-                modifier = Modifier.width(100.dp)
+                modifier = Modifier.width(100.dp),
             )
 
             Column(
                 modifier = Modifier
-                    .background(color = Color.White)
                     .padding(10.dp)
+                    .fillMaxWidth(0.8f)
             ) {
                 Text(
                     text = movie.name,
@@ -133,12 +235,20 @@ fun MovieCard(movie: MovieInfo) {
                     fontSize = 20.sp,
                     letterSpacing = TextUnit.Unspecified,
                     maxLines = 1,
-                    overflow = TextOverflow.Visible
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(text = movie.alternativeName, fontStyle = FontStyle.Italic)
+                Text(text = "${movie.genre}, ${movie.year}")
             }
 
-            Text(text = movie.rating.toString())
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                contentAlignment = Alignment.CenterEnd
+            ){
+                Text(text = movie.rating, fontWeight = FontWeight.Bold)
+            }
 
         }
     }

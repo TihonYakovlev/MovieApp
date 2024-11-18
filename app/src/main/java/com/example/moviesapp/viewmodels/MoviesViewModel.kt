@@ -1,6 +1,5 @@
 package com.example.moviesapp.viewmodels
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviesapp.repository.Repository
@@ -14,50 +13,81 @@ data class MovieInfo(
     val id: Int,
     val alternativeName: String,
     val name: String,
-    val rating: Double,
-    val releaseYear: Int,
+    val genre: String,
+    val rating: String,
+    val year: String,
     val poster: String,
 )
 
-sealed class ViewState {
-    object EmptyScreen : ViewState()
-    data class MoviesScreenState(
-        val moviesList: List<MovieInfo>,
-        val isNeedToLoadMoreMovies: Boolean,
-    ) : ViewState()
-    object Loading : ViewState()
-}
-
 data class MoviesScreenState(
     val moviesList: List<MovieInfo> = emptyList(),
-    val isNeedToLoadMoreMovies: Boolean = false,
+    val isLoading: Boolean = true,
+    val isNeedLoadFirstPage: Boolean = true,
+    val currentLazyListIndex: Int = 0,
 )
 
-class MoviesViewModel : ViewModel() {
-
+class MoviesViewModel(private val filtersState: StateFlow<FiltersScreenState>) : ViewModel() {
     private val _movies = MutableStateFlow(MoviesScreenState())
     val movies: StateFlow<MoviesScreenState>
         get() = _movies.asStateFlow()
 
-//    private val _movies = MutableStateFlow<ViewState>(ViewState.Loading)
-//    val movies: StateFlow<ViewState>
-//        get() = _movies.asStateFlow()
+    init {
+        viewModelScope.launch {
+            filtersState.collect{
+                resetMovies()
+            }
+        }
+    }
+
+    private var page: Int = INITIAL_PAGE
 
     private val repository = Repository()
 
-    private val lists = mutableListOf<MovieInfo>()
-    private var pageNo = 1
+    fun saveScreenState(newIndex: Int){
+        _movies.update {
+            state ->
+            state.copy(
+                currentLazyListIndex = newIndex
+            )
+        }
+    }
 
-    fun fetchMoviesList(pageNumber: Int, limitOfMoviesOnPage: Int) {
+    private fun resetMovies() {
+        _movies.update { state ->
+            state.copy(
+                moviesList = emptyList(),
+                isNeedLoadFirstPage = true,
+            )
+        }
+        page = INITIAL_PAGE
+    }
+
+    fun loadNextPageWithFilters() {
         viewModelScope.launch {
-            _movies.update {
-                MoviesScreenState(
-                    moviesList = repository.getMovies(
-                        page = pageNumber,
-                        limit = limitOfMoviesOnPage
-                    ),
+            try {
+                val movies = repository.getMoviesWithFilters(
+                    page = page,
+                    limit = PAGE_SIZE,
+                    countries = filtersState.value.selectedCountries.toList(),
+                    startYear = filtersState.value.selectedStartYear,
+                    endYear = filtersState.value.selectedEndYear,
+                    age = filtersState.value.selectedAge
                 )
+                _movies.update { state ->
+                    state.copy(
+                        moviesList = state.moviesList + movies, isLoading = false,
+                        isNeedLoadFirstPage = false
+                    )
+                }
+                page++
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
+    }
+
+    private companion object {
+        const val PAGE_SIZE = 10
+        const val INITIAL_PAGE = 1
     }
 }

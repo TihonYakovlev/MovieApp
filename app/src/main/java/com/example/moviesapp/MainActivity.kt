@@ -4,66 +4,58 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import com.example.moviesapp.presentation.screens.MoviesListScreen
-import com.example.moviesapp.ui.theme.MoviesAppTheme
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.compose.rememberNavController
+import com.example.moviesapp.presentation.AppNavigation
+import com.example.moviesapp.viewmodels.FiltersViewModel
+import com.example.moviesapp.viewmodels.MovieDetailsViewModel
 import com.example.moviesapp.viewmodels.MoviesViewModel
+import com.example.moviesapp.viewmodels.SearchViewModel
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val viewModel: MoviesViewModel by viewModels()
-
-            MoviesAppTheme {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = {
-                                Text("Movies")
-                            }
-                        )
-                    },
-                    bottomBar = {
-                        BottomAppBar(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.primary,
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                textAlign = TextAlign.Center,
-                                text = "Bottom app bar",
-                            )
-                        }
-                    },
-                    content = { innerPadding ->
-                        //  val coroutineScope = rememberCoroutineScope()
-                        //     val moviesScreenState = viewModel.movies.collectAsState()
-
-
-                        MoviesListScreen(
-                            modifier = Modifier
-                                .systemBarsPadding()
-                                .padding(paddingValues = innerPadding),
-                            //   screenState = moviesScreenState.value,
-                            viewModel = viewModel
-                        )
+            val detailsViewModel: MovieDetailsViewModel by viewModels()
+            val searchedMoviesViewModel: SearchViewModel by viewModels()
+            val filtersViewModel: FiltersViewModel by viewModels()
+            val viewModel: MoviesViewModel by viewModels {
+                viewModelFactory {
+                    initializer {
+                        MoviesViewModel(filtersViewModel.filters)
                     }
-                )
+                }
             }
+
+            MoviesApp(
+                viewModel = viewModel,
+                detailsViewModel = detailsViewModel,
+                searchedMoviesViewModel = searchedMoviesViewModel,
+                filtersViewModel = filtersViewModel,
+            )
         }
     }
 }
+
+@Composable
+fun MoviesApp(
+    viewModel: MoviesViewModel,
+    detailsViewModel: MovieDetailsViewModel,
+    searchedMoviesViewModel: SearchViewModel,
+    filtersViewModel: FiltersViewModel,
+) {
+    val navController = rememberNavController()
+    AppNavigation(
+        viewModel = viewModel,
+        detailsViewModel = detailsViewModel,
+        searchedMoviesViewModel = searchedMoviesViewModel,
+        filtersViewModel = filtersViewModel,
+        navController = navController
+    )
+}
+
+
+
 
