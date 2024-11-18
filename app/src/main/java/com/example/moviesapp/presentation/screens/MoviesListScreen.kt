@@ -3,6 +3,7 @@ package com.example.moviesapp.presentation.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -216,7 +217,6 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
             .clickable {
                 navController.navigate(route = Routes.MovieDetailsScreen + "/${movie.id}")
             },
-        // .background(color = Color.White),
         colors = CardColors(
             contentColor = Color.Black,
             disabledContentColor = Color.Black,
@@ -235,9 +235,10 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
 
             Column(
                 modifier = Modifier
-                    .background(color = Color.White)
+                    .background(color = Color.Green)
                     .padding(10.dp)
-                    .weight(1f, fill = false)
+                    .fillMaxWidth(0.8f)
+                    //.weight(4f, fill = false)
             ) {
                 Text(
                     text = movie.name,
@@ -251,7 +252,16 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
                 Text(text = "${movie.genre}, ${movie.year}")
             }
 
-            Text(text = movie.rating)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                  //  .weight(1f)
+                    .background(color = Color.Red),
+                contentAlignment = Alignment.CenterEnd
+            ){
+                Text(text = movie.rating, )
+            }
 
         }
     }

@@ -153,10 +153,7 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(onClick = {
-//                selectedAge = null
-//                startYear = ""
-//                endYear = ""
-//                selectedCountries.clear()
+                viewModel.clearFilters()
             }) { Text("Сбросить") }
             Button(onClick = { navController.navigate(Routes.MoviesListScreen) }) { Text("Применить") }
         }

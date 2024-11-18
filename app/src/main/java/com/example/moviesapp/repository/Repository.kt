@@ -17,7 +17,7 @@ class Repository {
                 alternativeName = it.alternativeName ?: "",
                 name = it.name ?: (it.alternativeName ?: ""),
                 genre = it.genres?.first()?.name ?: "-",
-                rating = if (it.rating?.imdb.toString() == "0.0") "-" else it.rating?.imdb.toString(),
+                rating = if (it.rating?.imdb.toString() == "0.0") "No rating" else it.rating?.imdb.toString(),
                 year = if (it.year.toString() == "null") "-" else it.year.toString(),
                 poster = it.poster?.url ?: ""
             )
@@ -100,7 +100,7 @@ class Repository {
                 alternativeName = it.alternativeName ?: "",
                 name = it.name ?: (it.alternativeName ?: ""),
                 genre = it.genres?.first()?.name ?: "-",
-                rating = if (it.rating?.imdb.toString() == "0.0") "-" else it.rating?.imdb.toString(),
+                rating = if (it.rating?.imdb.toString() == "0.0") "No rating" else it.rating?.imdb.toString(),
                 year = if (it.year.toString() == "null") "-" else it.year.toString(),
                 poster = it.poster?.url ?: ""
             )

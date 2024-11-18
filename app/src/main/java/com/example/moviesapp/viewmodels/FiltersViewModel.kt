@@ -27,15 +27,25 @@ class FiltersViewModel : ViewModel() {
 
     fun updateSelectedAge(newValue: Int) {
 
+
         _filters.update { state ->
-            val updatedAge = if (state.selectedAge.contains(newValue)) {
-                state.selectedAge - newValue
+
+            if (newValue == -1) {
+                state.copy(
+                    selectedAge = emptySet()
+                )
             } else {
-                state.selectedAge + newValue
+                val updatedAge = if (state.selectedAge.contains(newValue)) {
+                    state.selectedAge - newValue
+                } else {
+                    state.selectedAge + newValue
+                }
+                state.copy(
+                    selectedAge = updatedAge
+                )
             }
-            state.copy(
-                selectedAge = updatedAge
-            )
+
+
         }
     }
 
@@ -56,31 +66,28 @@ class FiltersViewModel : ViewModel() {
     }
 
     fun updateSelectedCountries(newCountry: String) {
+
         _filters.update { state ->
             val updatedCountries = if (state.selectedCountries.contains(newCountry)) {
                 state.selectedCountries - newCountry
             } else {
                 state.selectedCountries + newCountry
             }
-            state.copy(selectedCountries = updatedCountries)
+            if (newCountry.isNotEmpty()) {
+                state.copy(selectedCountries = updatedCountries)
+            } else {
+                state.copy(selectedCountries = emptySet())
+            }
         }
     }
 
-    fun updateFilters(
-        selectedAge: Set<Int>,
-        selectedCountries: Set<String>,
-        selectedStartYear: String,
-        selectedEndYear: String
-    ) {
-        _filters.update { state ->
-            state.copy(
-                selectedAge = selectedAge,
-                selectedCountries = selectedCountries,
-                selectedStartYear = selectedStartYear,
-                selectedEndYear = selectedEndYear,
-            )
-        }
+    fun clearFilters (){
+        updateSelectedAge(-1)
+        updateSelectedStartYear("1874")
+        updateSelectedEndYear("2050")
+        updateSelectedCountries("")
     }
+
 
     fun getAllCountries() {
         viewModelScope.launch {
