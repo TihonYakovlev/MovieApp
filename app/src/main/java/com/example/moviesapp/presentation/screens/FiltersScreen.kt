@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.moviesapp.presentation.Routes
@@ -64,8 +66,8 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
             .padding(16.dp)
     ) {
 
-        Text("По возрастному ограничению")
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        Text("Возрастное ограничение")
+        Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
             listOf(0, 6, 12, 18).forEach { age ->
                 Card(
                     modifier = Modifier
@@ -82,8 +84,8 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
         }
 
 
-        Text("По году", modifier = Modifier.padding(top = 16.dp))
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Text("Год", modifier = Modifier.padding(top = 16.dp))
+        Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)) {
             OutlinedTextField(
                 value = startYear,
                 onValueChange = {
@@ -92,7 +94,8 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
                 label = { Text("От") },
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 8.dp)
+                    .padding(end = 8.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             OutlinedTextField(
                 value = endYear,
@@ -100,7 +103,8 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
                     viewModel.updateSelectedEndYear(it)
                 },
                 label = { Text("До") },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }
 

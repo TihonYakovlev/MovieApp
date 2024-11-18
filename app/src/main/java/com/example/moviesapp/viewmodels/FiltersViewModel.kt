@@ -50,23 +50,30 @@ class FiltersViewModel : ViewModel() {
     }
 
     fun updateSelectedStartYear(newValue: String) {
+
+        val handeledStartYear =
+            if (newValue.isNotEmpty())  if (newValue.length == 4 && newValue.toInt() < 1874) "1874" else newValue else ""
+
         _filters.update { state ->
             state.copy(
-                selectedStartYear = newValue
+                selectedStartYear = handeledStartYear
             )
         }
     }
 
     fun updateSelectedEndYear(newValue: String) {
+
+        val handeledEndYear =
+            if (newValue.isNotEmpty()) if (newValue.toInt() > 2050) "2050" else newValue else ""
+
         _filters.update { state ->
             state.copy(
-                selectedEndYear = newValue
+                selectedEndYear = handeledEndYear
             )
         }
     }
 
     fun updateSelectedCountries(newCountry: String) {
-
         _filters.update { state ->
             val updatedCountries = if (state.selectedCountries.contains(newCountry)) {
                 state.selectedCountries - newCountry
@@ -81,7 +88,7 @@ class FiltersViewModel : ViewModel() {
         }
     }
 
-    fun clearFilters (){
+    fun clearFilters() {
         updateSelectedAge(-1)
         updateSelectedStartYear("1874")
         updateSelectedEndYear("2050")
