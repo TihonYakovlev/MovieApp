@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -73,25 +74,12 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String, navControlle
                         IconButton(onClick = { navController.navigateUp() }) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Вернуться назад"
+                                contentDescription = stringResource(R.string.navigate_back)
                             )
                         }
                     },
 
                 )
-            },
-            bottomBar = {
-                BottomAppBar(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = "Bottom app bar",
-                    )
-                }
             },
             content = { innerPadding ->
                 DetailsContent(
@@ -126,12 +114,12 @@ fun DetailsContent(
                 .height(250.dp)
                 .clip(RoundedCornerShape(12.dp)),
             model = details.logo,
-            contentDescription = "Movie Poster",
+            contentDescription = stringResource(R.string.movie_poster),
             success = { state ->
                 Image(
                     modifier = Modifier.fillMaxSize(),
                     painter = state.painter,
-                    contentDescription = "Poster"
+                    contentDescription = stringResource(R.string.movie_poster)
                 )
             },
             loading = {
@@ -147,7 +135,7 @@ fun DetailsContent(
             error = {
                 Image(
                     painter = painterResource(R.drawable.no_foto),
-                    contentDescription = "No Image",
+                    contentDescription = stringResource(R.string.no_photo),
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -194,10 +182,10 @@ fun DetailsContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                InfoTag(label = "Год", value = details.year.toString())
-                InfoTag(label = "Рейтинг", value = details.rating.toString())
-                InfoTag(label = "Продолжительность", value = "${details.movieLength} мин")
-                InfoTag(label = "Возраст", value = "${details.ageRating}+")
+                InfoTag(label = stringResource(R.string.year), value = details.year.toString())
+                InfoTag(label = stringResource(R.string.rating), value = details.rating.toString())
+                InfoTag(label = stringResource(R.string.duration), value = "${details.movieLength}" + stringResource(R.string.minutes))
+                InfoTag(label = stringResource(R.string.age), value = "${details.ageRating}" + stringResource(R.string.plus))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -213,7 +201,7 @@ fun DetailsContent(
 
 
         Text(
-            text = "Люди",
+            text = stringResource(R.string.people),
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(10.dp)
@@ -308,7 +296,7 @@ fun PersonCard(person: People) {
     ) {
         SubcomposeAsyncImage(
             model = person.photo,
-            contentDescription = "Person Photo",
+            contentDescription = stringResource(R.string.person_photo),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
@@ -316,7 +304,7 @@ fun PersonCard(person: People) {
             success = { state ->
                 Image(
                     painter = state.painter,
-                    contentDescription = "Person Photo",
+                    contentDescription = stringResource(R.string.person_photo),
                     modifier = Modifier.fillMaxSize()
                 )
             },
@@ -326,7 +314,7 @@ fun PersonCard(person: People) {
             error = {
                 Image(
                     painter = painterResource(R.drawable.no_foto),
-                    contentDescription = "No Photo",
+                    contentDescription = stringResource(R.string.no_photo),
                     modifier = Modifier.fillMaxSize()
                 )
             }

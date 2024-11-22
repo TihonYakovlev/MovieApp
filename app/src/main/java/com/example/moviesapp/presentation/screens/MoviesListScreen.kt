@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -33,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,8 +66,14 @@ fun MoviesListScreen(
     navController: NavController
 ) {
 
+    val screenState = viewModel.movies.collectAsState()
+
     var searchValue by remember {
         mutableStateOf("")
+    }
+
+    val isSearchBarActive = remember {
+        mutableStateOf(false)
     }
 
     MoviesAppTheme {
@@ -81,14 +89,19 @@ fun MoviesListScreen(
                             searchValue = newQuery
                         },
                         onSearch = {
+                            isSearchBarActive.value = false
                             if (searchValue.isNotEmpty()) {
                                 navController.navigate(route = Routes.SearchedMoviesScreen + "/${searchValue}")
                             }
                         },
-                        active = false,
-                        onActiveChange = {},
+                        active = isSearchBarActive.value,
+                        onActiveChange = {
+                            isSearchBarActive.value = it
+                        },
                         placeholder = { Text(text = "Поиск...") },
-                        content = {}
+                        content = {
+
+                        }
                     )
                     IconButton(
                         onClick = {

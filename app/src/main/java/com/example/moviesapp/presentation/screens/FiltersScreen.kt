@@ -27,9 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.moviesapp.R
 import com.example.moviesapp.presentation.Routes
 import com.example.moviesapp.viewmodels.FiltersViewModel
 import kotlinx.coroutines.launch
@@ -66,8 +68,13 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
             .padding(16.dp)
     ) {
 
-        Text("Возрастное ограничение")
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+        Text(text = stringResource(R.string.age))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
             listOf(0, 6, 12, 18).forEach { age ->
                 Card(
                     modifier = Modifier
@@ -78,20 +85,24 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
                         containerColor = if (selectedAge.contains(age)) androidx.compose.ui.graphics.Color.Cyan else androidx.compose.ui.graphics.Color.LightGray
                     )
                 ) {
-                    Text("$age+", modifier = Modifier.padding(8.dp))
+                    Text("$age" + stringResource(R.string.plus), modifier = Modifier.padding(8.dp))
                 }
             }
         }
 
 
-        Text("Год", modifier = Modifier.padding(top = 16.dp))
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)) {
+        Text(text = stringResource(R.string.year), modifier = Modifier.padding(top = 16.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+        ) {
             OutlinedTextField(
                 value = startYear,
                 onValueChange = {
                     viewModel.updateSelectedStartYear(it)
                 },
-                label = { Text("От") },
+                label = { Text(text = stringResource(R.string.from)) },
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
@@ -102,7 +113,7 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
                 onValueChange = {
                     viewModel.updateSelectedEndYear(it)
                 },
-                label = { Text("До") },
+                label = { Text(text = stringResource(R.string.to)) },
                 modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
@@ -115,7 +126,9 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
                 .clickable { isCountriesExpanded = !isCountriesExpanded }
         ) {
             Text(
-                text = if (isCountriesExpanded) "Скрыть список стран" else "Выбрать страну",
+                text = if (isCountriesExpanded) stringResource(R.string.hide_list_of_countries) else stringResource(
+                    R.string.show_list_of_countries
+                ),
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -157,8 +170,14 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
         ) {
             Button(onClick = {
                 viewModel.clearFilters()
-            }) { Text("Сбросить") }
-            Button(onClick = { navController.navigate(Routes.MoviesListScreen) }) { Text("Применить") }
+            }) { Text(text = stringResource(R.string.clear)) }
+            Button(onClick = { navController.navigate(Routes.MoviesListScreen) }) {
+                Text(
+                    text = stringResource(
+                        R.string.apply
+                    )
+                )
+            }
         }
     }
 }
