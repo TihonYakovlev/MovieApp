@@ -106,7 +106,6 @@ fun DetailsContent(
         modifier = modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
-            .background(Color(0xFFFAFAFA))
     ) {
         SubcomposeAsyncImage(
             modifier = Modifier
@@ -125,8 +124,7 @@ fun DetailsContent(
             loading = {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Gray),
+                        .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()

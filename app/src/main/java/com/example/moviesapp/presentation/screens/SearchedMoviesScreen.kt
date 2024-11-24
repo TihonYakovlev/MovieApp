@@ -60,19 +60,6 @@ fun SearchedMoviesScreen(viewModel: SearchViewModel, navController: NavControlle
                     //   colors = TopAppBarColors()
                 )
             },
-            bottomBar = {
-                BottomAppBar(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = "Bottom app bar",
-                    )
-                }
-            },
             content = { innerPadding ->
                 SearchedMoviesListScreenContent(
                     viewModel = viewModel,

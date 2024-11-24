@@ -1,6 +1,7 @@
 package com.example.moviesapp.presentation.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -112,19 +113,6 @@ fun MoviesListScreen(
                     }
                 }
             },
-            bottomBar = {
-                BottomAppBar(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = "Bottom app bar",
-                    )
-                }
-            },
             content = { innerPadding ->
                 MoviesListScreenContent(
                     viewModel = viewModel,
@@ -173,8 +161,9 @@ fun MoviesListScreenContent(
 
     if (screenState.isLoading) {
         Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            modifier = modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center,
+
         ) {
             CircularProgressIndicator()
         }
@@ -223,10 +212,10 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
                 navController.navigate(route = Routes.MovieDetailsScreen + "/${movie.id}")
             },
         colors = CardColors(
-            contentColor = Color.Black,
-            disabledContentColor = Color.Black,
-            containerColor = Color.White,
-            disabledContainerColor = Color.Red
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.surface,
+            disabledContentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {

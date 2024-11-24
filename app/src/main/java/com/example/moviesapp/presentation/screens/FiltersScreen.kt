@@ -12,12 +12,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,34 +38,67 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.moviesapp.R
 import com.example.moviesapp.presentation.Routes
+import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.example.moviesapp.viewmodels.FiltersViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController: NavController) {
+    MoviesAppTheme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(R.string.filters),
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.navigateUp() }) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.navigate_back)
+                            )
+                        }
+                    },
+                )
+            },
+            content = { innerPadding ->
+                FiltersContent(
+                    viewModel = viewModel,
+                    modifier = modifier.padding(innerPadding),
+                    navController = navController
+                )
+            }
+        )
+    }
+}
 
+
+@Composable
+fun FiltersContent(viewModel: FiltersViewModel, modifier: Modifier, navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
-
 
     var isCountriesExpanded by remember { mutableStateOf(false) }
 
     val screenState = viewModel.filters.collectAsState()
     val allCountries = viewModel.allCountries.collectAsState()
 
-
     val selectedAge = screenState.value.selectedAge
-
     val startYear = screenState.value.selectedStartYear
     val endYear = screenState.value.selectedEndYear
     val selectedCountries = screenState.value.selectedCountries
-
 
     val countriesListState = rememberLazyListState()
 
@@ -67,8 +111,11 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
-        Text(text = stringResource(R.string.age))
+        Text(
+            text = stringResource(R.string.age),
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleMedium
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -78,20 +125,32 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
             listOf(0, 6, 12, 18).forEach { age ->
                 Card(
                     modifier = Modifier
-                        .clickable {
-                            viewModel.updateSelectedAge(age)
-                        },
+                        .clickable { viewModel.updateSelectedAge(age) },
                     colors = CardDefaults.cardColors(
-                        containerColor = if (selectedAge.contains(age)) androidx.compose.ui.graphics.Color.Cyan else androidx.compose.ui.graphics.Color.LightGray
+                        containerColor = if (selectedAge.contains(age))
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant
                     )
                 ) {
-                    Text("$age" + stringResource(R.string.plus), modifier = Modifier.padding(8.dp))
+                    Text(
+                        text = "$age${stringResource(R.string.plus)}",
+                        modifier = Modifier.padding(8.dp),
+                        color = if (selectedAge.contains(age))
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }
 
-
-        Text(text = stringResource(R.string.year), modifier = Modifier.padding(top = 16.dp))
+        Text(
+            text = stringResource(R.string.year),
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(top = 16.dp),
+            style = MaterialTheme.typography.titleMedium
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,10 +158,13 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
         ) {
             OutlinedTextField(
                 value = startYear,
-                onValueChange = {
-                    viewModel.updateSelectedStartYear(it)
-                },
+                onValueChange = { viewModel.updateSelectedStartYear(it) },
                 label = { Text(text = stringResource(R.string.from)) },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    disabledTextColor = MaterialTheme.colorScheme.onBackground
+                ),
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
@@ -110,10 +172,13 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
             )
             OutlinedTextField(
                 value = endYear,
-                onValueChange = {
-                    viewModel.updateSelectedEndYear(it)
-                },
+                onValueChange = { viewModel.updateSelectedEndYear(it) },
                 label = { Text(text = stringResource(R.string.to)) },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    disabledTextColor = MaterialTheme.colorScheme.onBackground
+                ),
                 modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
@@ -123,13 +188,18 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
-                .clickable { isCountriesExpanded = !isCountriesExpanded }
+                .clickable { isCountriesExpanded = !isCountriesExpanded },
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            )
         ) {
             Text(
-                text = if (isCountriesExpanded) stringResource(R.string.hide_list_of_countries) else stringResource(
-                    R.string.show_list_of_countries
-                ),
-                modifier = Modifier.padding(16.dp)
+                text = if (isCountriesExpanded)
+                    stringResource(R.string.hide_list_of_countries)
+                else
+                    stringResource(R.string.show_list_of_countries),
+                modifier = Modifier.padding(16.dp),
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
 
@@ -145,17 +215,21 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp, horizontal = 8.dp)
-                            .clickable {
-                                viewModel.updateSelectedCountries(country)
-                            },
+                            .clickable { viewModel.updateSelectedCountries(country) },
                         colors = CardDefaults.cardColors(
-                            containerColor = if (selectedCountries.contains(country)) androidx.compose.ui.graphics.Color.Cyan else androidx.compose.ui.graphics.Color.White
+                            containerColor = if (selectedCountries.contains(country))
+                                MaterialTheme.colorScheme.primaryContainer
+                            else
+                                MaterialTheme.colorScheme.surfaceVariant
                         )
                     ) {
                         Text(
                             text = country,
                             modifier = Modifier.padding(16.dp),
-                            color = androidx.compose.ui.graphics.Color.Black
+                            color = if (selectedCountries.contains(country))
+                                MaterialTheme.colorScheme.onPrimaryContainer
+                            else
+                                MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -168,14 +242,16 @@ fun FiltersScreen(viewModel: FiltersViewModel, modifier: Modifier, navController
                 .padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = {
-                viewModel.clearFilters()
-            }) { Text(text = stringResource(R.string.clear)) }
+            Button(onClick = { viewModel.clearFilters() }) {
+                Text(
+                    text = stringResource(R.string.clear),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
             Button(onClick = { navController.navigate(Routes.MoviesListScreen) }) {
                 Text(
-                    text = stringResource(
-                        R.string.apply
-                    )
+                    text = stringResource(R.string.apply),
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
