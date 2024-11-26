@@ -124,7 +124,7 @@ fun SearchedMoviesListScreenContent(
             }
 
             item {
-                if (isScrolledToEnd.value) {
+                if (isScrolledToEnd.value && (listState.layoutInfo.totalItemsCount > 5)) {
                     Box(
                         modifier = modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center

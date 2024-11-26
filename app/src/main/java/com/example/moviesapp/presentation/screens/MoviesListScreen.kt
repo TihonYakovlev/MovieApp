@@ -160,8 +160,11 @@ fun MoviesListScreenContent(
     }
 
     if (screenState.isLoading) {
+        println("CircularProgressIndicator called from screenState.isLoading")
         Box(
-            modifier = modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background),
+            modifier = modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center,
 
         ) {
@@ -178,7 +181,9 @@ fun MoviesListScreenContent(
                 MovieCard(movie, navController)
             }
 
-            if (isScrolledToEnd.value) {
+            if (isScrolledToEnd.value && (listState.layoutInfo.totalItemsCount > 5)) {
+                println("Total items count is ${listState.layoutInfo.totalItemsCount}")
+                println("isScrollToEnd value is ${isScrolledToEnd.value}")
             item {
                     Box(
                         modifier = modifier.fillMaxWidth(),
