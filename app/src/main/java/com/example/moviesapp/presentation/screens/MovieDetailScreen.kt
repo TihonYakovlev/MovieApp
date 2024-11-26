@@ -307,7 +307,9 @@ fun PersonCard(person: People) {
                 )
             },
             loading = {
-                CircularProgressIndicator(modifier = Modifier.fillMaxSize())
+                Box(contentAlignment = Alignment.Center){
+                    CircularProgressIndicator()
+                }
             },
             error = {
                 Image(
