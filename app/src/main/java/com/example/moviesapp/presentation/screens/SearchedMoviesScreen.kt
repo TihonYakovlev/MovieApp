@@ -91,7 +91,6 @@ fun SearchedMoviesListScreenContent(
     }
 
     LaunchedEffect(Unit) {
-
         if (screenState.isNeedLoadFirstPage) {
             viewModel.loadNextSearchedPage(query)
         }

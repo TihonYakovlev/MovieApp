@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,7 +36,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -79,7 +77,7 @@ fun MovieDetailScreen(viewModel: MovieDetailsViewModel, id: String, navControlle
                         }
                     },
 
-                )
+                    )
             },
             content = { innerPadding ->
                 DetailsContent(
@@ -139,10 +137,8 @@ fun DetailsContent(
             }
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
         Column(
-            modifier = Modifier.padding(),
+            modifier = Modifier.padding(top = 10.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -154,6 +150,7 @@ fun DetailsContent(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
             )
+
             Text(
                 text = details.alternativeName,
                 style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
@@ -162,8 +159,6 @@ fun DetailsContent(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = details.description,
@@ -174,27 +169,39 @@ fun DetailsContent(
                     .padding(10.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(10.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                InfoTag(label = stringResource(R.string.year), value = details.year.toString())
-                InfoTag(label = stringResource(R.string.rating), value = details.rating.toString())
-                InfoTag(label = stringResource(R.string.duration), value = "${details.movieLength}" + stringResource(R.string.minutes))
-                InfoTag(label = stringResource(R.string.age), value = "${details.ageRating}" + stringResource(R.string.plus))
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                if (details.year != -1) {
+                    InfoTag(label = stringResource(R.string.year), value = details.year.toString())
+                }
+
+                if (details.rating != -1.0 && details.rating != 0.0) {
+                    InfoTag(
+                        label = stringResource(R.string.rating),
+                        value = details.rating.toString()
+                    )
+                }
+                if (details.movieLength != -1) {
+                    InfoTag(
+                        label = stringResource(R.string.duration),
+                        value = "${details.movieLength}" + stringResource(R.string.minutes)
+                    )
+                }
+                if (details.ageRating != -1) {
+                    InfoTag(
+                        label = stringResource(R.string.age),
+                        value = "${details.ageRating}" + stringResource(R.string.plus)
+                    )
+                }
+
+            }
 
             GenreTags(genres = details.genres)
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             CountryTags(countries = details.countries)
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
 
 
@@ -240,7 +247,7 @@ fun InfoTag(label: String, value: String) {
 fun GenreTags(genres: List<String>) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().padding(10.dp)
     ) {
         items(genres) { genre ->
             Text(
@@ -307,7 +314,7 @@ fun PersonCard(person: People) {
                 )
             },
             loading = {
-                Box(contentAlignment = Alignment.Center){
+                Box(contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
             },

@@ -13,14 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.List
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -43,10 +41,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -81,7 +78,9 @@ fun MoviesListScreen(
         Scaffold(
             topBar = {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(3.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     SearchBar(
@@ -99,7 +98,7 @@ fun MoviesListScreen(
                         onActiveChange = {
                             isSearchBarActive.value = it
                         },
-                        placeholder = { Text(text = "Поиск...") },
+                        placeholder = { Text(text = stringResource(R.string.search_bar_hint)) },
                         content = {
 
                         }
@@ -109,7 +108,10 @@ fun MoviesListScreen(
                             navController.navigate(Routes.FiltersScreen)
                         }
                     ) {
-                        Icon(Icons.AutoMirrored.TwoTone.List, contentDescription = "Фильтры")
+                        Icon(
+                            Icons.AutoMirrored.TwoTone.List,
+                            contentDescription = stringResource(R.string.filters)
+                        )
                     }
                 }
             },
@@ -143,7 +145,7 @@ fun MoviesListScreenContent(
 
     DisposableEffect(Unit) {
         onDispose {
-           viewModel.saveScreenState(listState.firstVisibleItemIndex)
+            viewModel.saveScreenState(listState.firstVisibleItemIndex)
         }
     }
 
@@ -160,14 +162,13 @@ fun MoviesListScreenContent(
     }
 
     if (screenState.isLoading) {
-        println("CircularProgressIndicator called from screenState.isLoading")
         Box(
             modifier = modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center,
 
-        ) {
+            ) {
             CircularProgressIndicator()
         }
     } else {
@@ -182,9 +183,7 @@ fun MoviesListScreenContent(
             }
 
             if (isScrolledToEnd.value && (listState.layoutInfo.totalItemsCount > 5)) {
-                println("Total items count is ${listState.layoutInfo.totalItemsCount}")
-                println("isScrollToEnd value is ${isScrolledToEnd.value}")
-            item {
+                item {
                     Box(
                         modifier = modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center
@@ -253,7 +252,7 @@ fun MovieCard(movie: MovieInfo, navController: NavController) {
                     .fillMaxWidth()
                     .padding(10.dp),
                 contentAlignment = Alignment.CenterEnd
-            ){
+            ) {
                 Text(text = movie.rating, fontWeight = FontWeight.Bold)
             }
 
