@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.LinkedList
+import java.util.Queue
 
 data class MovieInfo(
     val id: Int,
@@ -24,6 +26,7 @@ data class MoviesScreenState(
     val isLoading: Boolean = true,
     val isNeedLoadFirstPage: Boolean = true,
     val currentLazyListIndex: Int = 0,
+    val searchHistory: Queue<String> = LinkedList()
 )
 
 class MoviesViewModel(private val filtersState: StateFlow<FiltersScreenState>) : ViewModel() {
@@ -75,7 +78,8 @@ class MoviesViewModel(private val filtersState: StateFlow<FiltersScreenState>) :
                 )
                 _movies.update { state ->
                     state.copy(
-                        moviesList = state.moviesList + movies, isLoading = false,
+                        moviesList = state.moviesList + movies,
+                        isLoading = false,
                         isNeedLoadFirstPage = false
                     )
                 }
@@ -85,6 +89,17 @@ class MoviesViewModel(private val filtersState: StateFlow<FiltersScreenState>) :
             }
         }
     }
+
+//    fun writeValueToSearchHistory(value: String){
+//        val
+//        _movies.update {
+//            state ->
+//            state.copy(
+//                searchHistory = state.searchHistory.add(value)
+//            )
+//        }
+//
+//    }
 
     private companion object {
         const val PAGE_SIZE = 10
