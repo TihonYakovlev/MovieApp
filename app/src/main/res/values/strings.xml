@@ -20,4 +20,7 @@
     <string name="clear">Сбросить</string>
     <string name="apply">Применить</string>
     <string name="filters">Фильтры</string>
+    <string name="search_history">История поиска</string>
+    <string name="clear_history">Очистить историю</string>
+    <string name="no_search_history">История поиска пуста</string>
 </resources>

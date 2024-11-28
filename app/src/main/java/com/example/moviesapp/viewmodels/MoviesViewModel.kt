@@ -1,15 +1,26 @@
 package com.example.moviesapp.viewmodels
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringSetPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviesapp.repository.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.LinkedList
 import java.util.Queue
+
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "app_datastore")
 
 data class MovieInfo(
     val id: Int,
@@ -29,26 +40,37 @@ data class MoviesScreenState(
     val searchHistory: Queue<String> = LinkedList()
 )
 
-class MoviesViewModel(private val filtersState: StateFlow<FiltersScreenState>) : ViewModel() {
+class MoviesViewModel(
+    context: Context,
+    private val filtersState: StateFlow<FiltersScreenState>
+) : ViewModel() {
     private val _movies = MutableStateFlow(MoviesScreenState())
     val movies: StateFlow<MoviesScreenState>
         get() = _movies.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            filtersState.collect{
-                resetMovies()
-            }
-        }
+    private val repository = Repository()
+    private val dataStore = context.dataStore
+
+    private companion object {
+        const val PAGE_SIZE = 10
+        const val INITIAL_PAGE = 1
     }
 
     private var page: Int = INITIAL_PAGE
 
-    private val repository = Repository()
+    init {
+        viewModelScope.launch {
+            filtersState.collect {
+                resetMovies()
+            }
+        }
+        viewModelScope.launch {
+            loadSearchHistory()
+        }
+    }
 
-    fun saveScreenState(newIndex: Int){
-        _movies.update {
-            state ->
+    fun saveScreenState(newIndex: Int) {
+        _movies.update { state ->
             state.copy(
                 currentLazyListIndex = newIndex
             )
@@ -90,19 +112,46 @@ class MoviesViewModel(private val filtersState: StateFlow<FiltersScreenState>) :
         }
     }
 
-//    fun writeValueToSearchHistory(value: String){
-//        val
-//        _movies.update {
-//            state ->
-//            state.copy(
-//                searchHistory = state.searchHistory.add(value)
-//            )
-//        }
-//
-//    }
-
-    private companion object {
-        const val PAGE_SIZE = 10
-        const val INITIAL_PAGE = 1
+    fun clearSearchHistory() {
+        viewModelScope.launch {
+            dataStore.edit { preferences ->
+                preferences[DataStoreKeys.SEARCH_HISTORY] = emptySet()
+            }
+            loadSearchHistory()
+        }
     }
+
+    private suspend fun saveSearchQuery(query: String) {
+        dataStore.edit { preferences ->
+            val history = preferences[DataStoreKeys.SEARCH_HISTORY] ?: emptySet()
+            val updatedHistory = (listOf(query) + history).take(20).toSet()
+            preferences[DataStoreKeys.SEARCH_HISTORY] = updatedHistory
+        }
+    }
+
+    private suspend fun getSearchHistory(): List<String> {
+        return dataStore.data.map { preferences ->
+            preferences[DataStoreKeys.SEARCH_HISTORY]?.toList() ?: emptyList()
+        }.first()
+    }
+
+    fun addToSearchHistory(query: String) {
+        viewModelScope.launch {
+            saveSearchQuery(query)
+            loadSearchHistory()
+        }
+    }
+
+    fun loadSearchHistory() {
+        viewModelScope.launch {
+            val history = getSearchHistory()
+            _movies.update { state ->
+                state.copy(searchHistory = LinkedList(history))
+            }
+        }
+    }
+}
+
+object DataStoreKeys {
+    val SEARCH_HISTORY = stringSetPreferencesKey("search_history")
 }

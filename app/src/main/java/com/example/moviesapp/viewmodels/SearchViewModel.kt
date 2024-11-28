@@ -47,6 +47,16 @@ class SearchViewModel : ViewModel() {
         }
     }
 
+     fun resetMovies() {
+        _searchedMovies.update { state ->
+            state.copy(
+                searchedMovies = emptyList(),
+                isNeedLoadFirstPage = true,
+            )
+        }
+       searchedPage = INITIAL_SEARCHED_PAGE
+    }
+
     private companion object {
         const val PAGE_SIZE = 10
         const val INITIAL_SEARCHED_PAGE = 1
