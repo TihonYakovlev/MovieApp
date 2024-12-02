@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -46,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -113,7 +115,8 @@ fun TopBarContent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(3.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         SearchBar(
             query = searchValue,
@@ -311,15 +314,28 @@ fun MovieCard(
             disabledContentColor = MaterialTheme.colorScheme.onSurface
         ), elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
-        Row {
-            Image(
-                painter = moviePoster,
-                contentDescription = "Poster", modifier = Modifier.width(100.dp),
-            )
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            //verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(0.25f),
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                Image(
+                    painter = moviePoster,
+                    contentDescription = stringResource(R.string.movie_poster),
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+
             Column(
                 modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth(0.8f)
+                    .padding(20.dp)
+                    .fillMaxWidth(0.7f)
             ) {
                 Text(
                     text = movie.name, fontStyle = FontStyle.Normal,
