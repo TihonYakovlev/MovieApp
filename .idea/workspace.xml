@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e3a0b56e-f6cb-4b9f-a0f6-04cf220dd731" name="Changes" comment="adapted image in movie card and fix scrollable in FiltersContent" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\tijak\.android\avd\Medium_Phone.avd)]" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/app">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MoviesApp" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MoviesApp" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MoviesApp" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MoviesApp" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Class" />
+        <option value="Kotlin File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;TihonYakovlev&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/TihonYakovlev/MovieApp.git&quot;,
+    &quot;accountId&quot;: &quot;372c0c4c-25d6-4a1c-a6b6-db303377adc3&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2oYuoVwovdGeaQgHXO162kiwcKJ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Android App.app.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/tijak/Downloads/JsonToKotlinClass-3.7.5.zip",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.17",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\tijak\AndroidStudioProjects\MovieApp\app\src\main\java\com\example\moviesapp\ui\theme" />
+      <recent name="C:\Users\tijak\AndroidStudioProjects\MovieApp\app\src\main\res\drawable" />
+      <recent name="C:\Users\tijak\AndroidStudioProjects\MovieApp\app\src\main\java\com\example\moviesapp\presentation\" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.example.moviesapp.data.movies_list" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="MoviesApp.app.main" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="RESTORE_ENABLED" value="false" />
+      <option name="RESTORE_FILE" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Hybrid>
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e3a0b56e-f6cb-4b9f-a0f6-04cf220dd731" name="Changes" comment="" />
+      <created>1731059005331</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731059005331</updated>
+    </task>
+    <task id="LOCAL-00001" summary="added Repository">
+      <option name="closed" value="true" />
+      <created>1731099220101</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731099220101</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added Coil to load posters to movie card">
+      <option name="closed" value="true" />
+      <created>1731104073035</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1731104073035</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fixed padding between scaffold and app bars">
+      <option name="closed" value="true" />
+      <created>1731105056257</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1731105056257</updated>
+    </task>
+    <task id="LOCAL-00004" summary="added some info on movie card">
+      <option name="closed" value="true" />
+      <created>1731107315562</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1731107315563</updated>
+    </task>
+    <task id="LOCAL-00005" summary="added CircularProgressBar when movies do not loaded">
+      <option name="closed" value="true" />
+      <created>1731170779406</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1731170779407</updated>
+    </task>
+    <task id="LOCAL-00006" summary="added pagination, but grid do not saving old list after get a new list">
+      <option name="closed" value="true" />
+      <created>1731172641141</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1731172641141</updated>
+    </task>
+    <task id="LOCAL-00007" summary="implement pagination but some bug">
+      <option name="closed" value="true" />
+      <created>1731241061732</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1731241061732</updated>
+    </task>
+    <task id="LOCAL-00008" summary="added navigation">
+      <option name="closed" value="true" />
+      <created>1731275381018</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1731275381018</updated>
+    </task>
+    <task id="LOCAL-00009" summary="search is implemented">
+      <option name="closed" value="true" />
+      <created>1731407771013</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1731407771013</updated>
+    </task>
+    <task id="LOCAL-00010" summary="search bugs (few calls api when i search, do not clearing list from past search when i do next search) are fixed">
+      <option name="closed" value="true" />
+      <created>1731411708488</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1731411708488</updated>
+    </task>
+    <task id="LOCAL-00011" summary="added a plug for no foto movies">
+      <option name="closed" value="true" />
+      <created>1731422289586</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1731422289586</updated>
+    </task>
+    <task id="LOCAL-00012" summary="some refactoring">
+      <option name="closed" value="true" />
+      <created>1731540804330</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1731540804330</updated>
+    </task>
+    <task id="LOCAL-00013" summary="some refactoring">
+      <option name="closed" value="true" />
+      <created>1731594256680</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1731594256680</updated>
+    </task>
+    <task id="LOCAL-00014" summary="implementing MovieDetailScreen">
+      <option name="closed" value="true" />
+      <created>1731620868073</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1731620868074</updated>
+    </task>
+    <task id="LOCAL-00015" summary="separate search logic into the new view model">
+      <option name="closed" value="true" />
+      <created>1731702632491</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1731702632491</updated>
+    </task>
+    <task id="LOCAL-00016" summary="align details screen">
+      <option name="closed" value="true" />
+      <created>1731706629291</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1731706629291</updated>
+    </task>
+    <task id="LOCAL-00017" summary="boost filters screen">
+      <option name="closed" value="true" />
+      <created>1731795570176</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1731795570176</updated>
+    </task>
+    <task id="LOCAL-00018" summary="added filters">
+      <option name="closed" value="true" />
+      <created>1731880680836</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1731880680836</updated>
+    </task>
+    <task id="LOCAL-00019" summary="implement button clearFilters">
+      <option name="closed" value="true" />
+      <created>1731928720276</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1731928720276</updated>
+    </task>
+    <task id="LOCAL-00020" summary="added mappers">
+      <option name="closed" value="true" />
+      <created>1731930266688</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1731930266688</updated>
+    </task>
+    <task id="LOCAL-00021" summary="some refactoring">
+      <option name="closed" value="true" />
+      <created>1731931064677</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1731931064677</updated>
+    </task>
+    <task id="LOCAL-00022" summary="some refactoring">
+      <option name="closed" value="true" />
+      <created>1731931668912</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1731931668912</updated>
+    </task>
+    <task id="LOCAL-00023" summary="added a handeling a end tear in text field but start year nothing work">
+      <option name="closed" value="true" />
+      <created>1731938673761</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1731938673761</updated>
+    </task>
+    <task id="LOCAL-00024" summary="replace static text to stringResource">
+      <option name="closed" value="true" />
+      <created>1732277496435</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1732277496435</updated>
+    </task>
+    <task id="LOCAL-00025" summary="adapted theme">
+      <option name="closed" value="true" />
+      <created>1732484314324</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1732484314324</updated>
+    </task>
+    <task id="LOCAL-00026" summary="fix loading indicator when list has one item">
+      <option name="closed" value="true" />
+      <created>1732618436586</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1732618436586</updated>
+    </task>
+    <task id="LOCAL-00027" summary="fix loading indicator when list has one item">
+      <option name="closed" value="true" />
+      <created>1732618494172</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1732618494172</updated>
+    </task>
+    <task id="LOCAL-00028" summary="fix progress indicator of person">
+      <option name="closed" value="true" />
+      <created>1732618924492</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1732618924492</updated>
+    </task>
+    <task id="LOCAL-00029" summary="replace spacers to padding">
+      <option name="closed" value="true" />
+      <created>1732625585582</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1732625585582</updated>
+    </task>
+    <task id="LOCAL-00030" summary="added search history">
+      <option name="closed" value="true" />
+      <created>1732831730507</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1732831730507</updated>
+    </task>
+    <task id="LOCAL-00031" summary="fix bug with multiple calls when page was scroll to end">
+      <option name="closed" value="true" />
+      <created>1733137216651</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1733137216651</updated>
+    </task>
+    <task id="LOCAL-00032" summary="adapted image in movie card and fix scrollable in FiltersContent">
+      <option name="closed" value="true" />
+      <created>1733140026497</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1733140026497</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added some info on movie card" />
+    <MESSAGE value="added CircularProgressBar when movies do not loaded" />
+    <MESSAGE value="added pagination, but grid do not saving old list after get a new list" />
+    <MESSAGE value="implement pagination but some bug" />
+    <MESSAGE value="added navigation" />
+    <MESSAGE value="search is implemented" />
+    <MESSAGE value="search bugs (few calls api when i search, do not clearing list from past search when i do next search) are fixed" />
+    <MESSAGE value="added a plug for no foto movies" />
+    <MESSAGE value="implementing MovieDetailScreen" />
+    <MESSAGE value="separate search logic into the new view model" />
+    <MESSAGE value="align details screen" />
+    <MESSAGE value="boost filters screen" />
+    <MESSAGE value="added filters" />
+    <MESSAGE value="implement button clearFilters" />
+    <MESSAGE value="added mappers" />
+    <MESSAGE value="some refactoring" />
+    <MESSAGE value="added a handeling a end tear in text field but start year nothing work" />
+    <MESSAGE value="replace static text to stringResource" />
+    <MESSAGE value="adapted theme" />
+    <MESSAGE value="fix loading indicator when list has one item" />
+    <MESSAGE value="fix progress indicator of person" />
+    <MESSAGE value="replace spacers to padding" />
+    <MESSAGE value="added search history" />
+    <MESSAGE value="fix bug with multiple calls when page was scroll to end" />
+    <MESSAGE value="adapted image in movie card and fix scrollable in FiltersContent" />
+    <option name="LAST_COMMIT_MESSAGE" value="adapted image in movie card and fix scrollable in FiltersContent" />
+  </component>
+</project>
