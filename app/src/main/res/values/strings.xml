@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">MoviesApp</string>
+    <string name="results_of_search">Результаты поиска</string>
+    <string name="search_bar_hint">Поиск…</string>
+    <string name="year">Год</string>
+    <string name="duration">Продолжительность</string>
+    <string name="rating">Рейтинг</string>
+    <string name="age">Возраст</string>
+    <string name="people">Люди</string>
+    <string name="navigate_back">Вернуться назад</string>
+    <string name="no_photo">Нет фотографии</string>
+    <string name="movie_poster">Постер фильма</string>
+    <string name="minutes">мин</string>
+    <string name="plus">+</string>
+    <string name="person_photo">Фото человека</string>
+    <string name="from">От</string>
+    <string name="to">До</string>
+    <string name="hide_list_of_countries">Скрыть список стран</string>
+    <string name="show_list_of_countries">Выбрать страну</string>
+    <string name="clear">Сбросить</string>
+    <string name="apply">Применить</string>
+    <string name="filters">Фильтры</string>
+    <string name="search_history">История поиска</string>
+    <string name="clear_history">Очистить историю</string>
+    <string name="no_search_history">История поиска пуста</string>
+</resources>
