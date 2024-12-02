@@ -21,10 +21,14 @@ class SearchViewModel : ViewModel() {
         get() = _searchedMovies.asStateFlow()
 
     private var searchedPage: Int = INITIAL_SEARCHED_PAGE
-
+    var isLoadingNextPage = false
     private val repository = Repository()
 
     fun loadNextSearchedPage(query: String) {
+        if(isLoadingNextPage) return
+
+        isLoadingNextPage = true
+
         viewModelScope.launch {
             try {
                 val searchedMovies =
@@ -43,18 +47,20 @@ class SearchViewModel : ViewModel() {
                 searchedPage++
             } catch (e: Exception) {
                 e.printStackTrace()
+            } finally {
+                isLoadingNextPage = false
             }
         }
     }
 
-     fun resetMovies() {
+    fun resetMovies() {
         _searchedMovies.update { state ->
             state.copy(
                 searchedMovies = emptyList(),
                 isNeedLoadFirstPage = true,
             )
         }
-       searchedPage = INITIAL_SEARCHED_PAGE
+        searchedPage = INITIAL_SEARCHED_PAGE
     }
 
     private companion object {

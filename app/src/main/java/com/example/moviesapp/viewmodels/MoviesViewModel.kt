@@ -56,6 +56,8 @@ class MoviesViewModel(
         const val INITIAL_PAGE = 1
     }
 
+    var isLoadingNextPage = false
+
     private var page: Int = INITIAL_PAGE
 
     init {
@@ -88,6 +90,10 @@ class MoviesViewModel(
     }
 
     fun loadNextPageWithFilters() {
+        if (isLoadingNextPage) return
+
+        isLoadingNextPage = true
+
         viewModelScope.launch {
             try {
                 val movies = repository.getMoviesWithFilters(
@@ -98,6 +104,7 @@ class MoviesViewModel(
                     endYear = filtersState.value.selectedEndYear,
                     age = filtersState.value.selectedAge
                 )
+
                 _movies.update { state ->
                     state.copy(
                         moviesList = state.moviesList + movies,
@@ -105,12 +112,16 @@ class MoviesViewModel(
                         isNeedLoadFirstPage = false
                     )
                 }
+
                 page++
             } catch (e: Exception) {
                 e.printStackTrace()
+            } finally {
+                isLoadingNextPage = false
             }
         }
     }
+
 
     fun clearSearchHistory() {
         viewModelScope.launch {

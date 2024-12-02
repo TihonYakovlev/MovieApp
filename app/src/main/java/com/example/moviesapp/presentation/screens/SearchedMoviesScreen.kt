@@ -94,7 +94,7 @@ fun SearchedMoviesListScreenContent(
     }
 
     LaunchedEffect(isScrolledToEnd.value) {
-        if (isScrolledToEnd.value) {
+        if (isScrolledToEnd.value && !viewModel.isLoadingNextPage) {
             println("IHYGBPIDVHBPIUBEIJBCIDHBEPIHCBPJDCBOIDCB")
             viewModel.loadNextSearchedPage(query)
         }
